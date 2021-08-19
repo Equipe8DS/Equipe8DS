@@ -87,6 +87,23 @@ Nesta seção são descritos competidores ou alternativas ao aplicativo que est�
 | Lucas Midlhey Cardoso Naves | Equipe de Desenvolvimento |
 | Lucas Oliveira Silva | Equipe de Desenvolvimento |
 
+
+## 4. Visão geral do produto
+O objetivo principal do aplicativo é facilitar as ações do mestre, visto que o bot irá automatizar o processo de comprar e vender itens, além de que o jogador poderá gerenciar o seu próprio inventário, entre outros funcionamentos do RPG de mesa.
+
+### 4.1 Perspectiva do Produto
+Espera-se que o bot aperfeiçoe a jogabilidade do RPG de mesa, já que suas funções vão diminuir a carga do mestre, com recursos que serão feitos de forma automática pelo bot.
+
+### 4.2 Declaração de Posição do Produto
+| Para | Jogadores do RPG de mesa
+| --- | :--- |
+| Que | Queiram facilitar as ações do mestre. |
+| O | sistema |
+| Que | Promove melhor jogabilidade entre os jogadores. |
+|Ao Contrário | Da aplicação atual, que o mestre é responsável pela maior parte das ações e, consequentemente, fica sobrecarregado. |
+| Nosso Produto | Permite que os jogadores realizem ações sem depender exclusivamente do mestre, contribuindo para o RPG de mesa.
+
+
 ## 5. Recursos do produto
 
 O sistema de _chatbot_ irá fornecer as seguintes funcionalidades ao jogador:
