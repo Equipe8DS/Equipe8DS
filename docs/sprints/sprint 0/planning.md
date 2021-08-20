@@ -33,7 +33,15 @@ A priorização das histórias foi feita na necessidade de definir e consolidar 
 
 ## 3. Burndown de Riscos
 
-A  tabela a seguir lista todos os riscos que foram identificados para essa _Sprint_, a probabilidade deles ocorrerem, quantos dias serão perdidos caso o risco ocorra e a exposição ao risco que é calculado multiplicando a probabilidade do risco pelo tamanho da perda.
+A  tabela a seguir lista todos os riscos que foram identificados para essa _Sprint_, a probabilidade deles ocorrerem, quantos dias serão perdidos caso o risco ocorra e a exposição ao risco. A probabilidade do risco é dividida em:
+    * Nenhuma = 0%;
+    * Muita baixa = 15%;
+    * Baixa = 30%;
+    * Média = 50%;
+    * Alta = 70%;
+    * Vai ocorrer = 100%.
+
+Já a exposição é calculada multiplicando a probabilidade do risco pelo tamanho da perda.
 
 | #  | Descrição | Probabilidade do Risco |Tamanho da Perda (dias)|Exposição ao Risco |
 | :- | :---------------                                         | :---| :-| :--- |
