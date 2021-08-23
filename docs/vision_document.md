@@ -7,6 +7,7 @@
 | 18/08| 0.2 | Adicionado Descrição do Usuário, Envolvidos e Referências| João Vitor |
 | 18/08| 0.2.1 | Adicionada a ocupação dos Envolvidos| João Vitor |
 | 19/08| 0.3 | Adicionado Recursos do Produto| João Pedro |
+| 19/08| 0.3 | Adicionado Visão geral do produto| Leonardo Ferreira |
 
 ## Sumário
 [1. Introdução](#1-introdução)
