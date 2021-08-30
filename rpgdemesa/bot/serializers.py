@@ -4,4 +4,4 @@ from rest_framework import serializers
 class PersonagemSerializer (serializers.HyperlinkedModelSerializer) :
     class Meta : 
         model = Personagem 
-        fields = ['nome', 'raca', 'classe', 'tipo']
+        fields = ['nome', 'raca', 'classe', 'tipo', 'ativo']

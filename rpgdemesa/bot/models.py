@@ -6,7 +6,8 @@ class Personagem (models.Model):
     raca = models.CharField (max_length=100)
     classe = models.CharField (max_length=100)
     tipo = models.CharField (max_length=100)
-        
+    ativo = models.BooleanField (editable=False, default=True)
+
     class Meta:
         verbose_name = _("personagem")
         verbose_name_plural = _("personagens")
