@@ -5,7 +5,7 @@ class Personagem (models.Model):
     nome = models.CharField (max_length=100)
     raca = models.CharField (max_length=100)
     classe = models.CharField (max_length=100)
-    tipo = models.CharField (max_length=100)
+    tipo = models.CharField (max_length=100, editable=False, default='Jogador', choices=[('jogador', 'Jogador'), ('npc', 'NPC')])
     ativo = models.BooleanField (editable=False, default=True)
 
     class Meta:
