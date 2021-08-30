@@ -7,14 +7,13 @@
 - [1. Indicadores de Qualidade do Processo](#1-indicadores-de-qualidade-do-processo)
   - [1.1 Fechamento da _Sprint_](#11-fechamento-da-sprint)
   - [1.2 _Burndown_](#12-burndown)
-  - [1.3 Gráfico de _commits_](#13-gráfico-de-commits)
-  - [1.4 _Velocity_](#14-velocity)
-  - [1.5 Quadro de Conhecimento](#15-quadro-de-conhecimento)
-  - [1.6 Revisão da _Sprint_](#16-revisão-da-sprint)
-  - [1.7 Retrospectiva](#17-retrospectiva)
-  - [1.7.1 Pontos Positivos](#171-pontos-positivos)
-  - [1.7.2 Pontos Negativos](#172-pontos-negativos)
-  - [1.7.3 Melhorias](#173-melhorias)
+  - [1.3 _Velocity_](#14-velocity)
+  - [1.4 Quadro de Conhecimento](#15-quadro-de-conhecimento)
+  - [1.5 Revisão da _Sprint_](#16-revisão-da-sprint)
+  - [1.6 Retrospectiva](#17-retrospectiva)
+  - [1.6.1 Pontos Positivos](#171-pontos-positivos)
+  - [1.6.2 Pontos Negativos](#172-pontos-negativos)
+  - [1.6.3 Melhorias](#173-melhorias)
   - [2. Análise do _Scrum Master_](#2-análise-do-scrum-master)
 
 [2. Análise do _Scrum Master_](#2-análise-do-scrum-master)  
@@ -40,46 +39,46 @@ Dos 28 pontos planejados, 13 foram entregues, mais 18 pontos de dívida técnica
 
 ![](images/burndown_sprint1.png)
 
-Nessa _Sprint_ o _Burndown_ não teve o comportamento ideal. Porém, por ser a primeira do time, isso já era esperado.
+Nessa _Sprint_ o _Burndown_ não teve o comportamento ideal. Porém, por ser a primeira sprint com código do time, isso já era esperado.
 
 
-### 1.4 _Velocity_
+### 1.3 _Velocity_
 
 ![](images/velocity_sprint1.png)
 
 O _velocity_ representa a média de pontos entregues por _Sprint_. Essa __sprint__ o __velocity__ aumentou de 17 para 24.
 
-### 1.5 Quadro de Conhecimento
+### 1.4 Quadro de Conhecimento
 ![](images/knowledge_framework_sprint1.png)
 
 Pelo quadro atual de conhecimento percebe-se que uma parte do time possui um certo domínio da tecnologias que serão usadas e espera-se, por esse motivo e com o uso de pareamentos, que o conhecimento se torne mais homogênio.
 
-### 1.6 Revisão da _Sprint_
+### 1.5 Revisão da _Sprint_
 
 O membro Lucas Leite teve problemas para levantar o ambiente, mas conseguiu corrigir.
 
-### 1.7 Retrospectiva
+### 1.6 Retrospectiva
 
-### 1.7.1 Pontos Positivos
+### 1.6.1 Pontos Positivos
 
   - A equipe conseguiu entregar sua primeira história de usuário.
   - O time conseguiu migrar para o telegram sem problemas.
   - Houve percepção de melhoria do conhecimento.
 
-### 1.7.2 Pontos Negativos
+### 1.6.2 Pontos Negativos
 
   - A equipe não fez daily.
   - Não foram entregues todos os pontos.
   - Falta de tempo e organização.
 
-### 1.7.3 Melhorias
+### 1.6.3 Melhorias
 
   - Procurar um bot de daily para o telegram.
 
 ### 2. Análise do _Scrum Master_
 
-Por ser a primeira _Sprint_ da equipe e ser o primeiro projeto de uma parte signitiva desta, esperava-se que ocorressem problemas e é um bom sinal que tenha ocorrido.
+Nessa _sprint_ o SM falhou novamente em executar as dailies e é importante que o próximo não deixe esse erro ser propagado e para isso é importante encontrar uma boa alternativa por isso encontrar um bot que faça isso pode ajudar bastante.
 
-Foi percebido que faltou iniciativa e participação por parte da maioria dos membros e, apesar de também ser esperado no início de um projeto, é importante tomar cuidado e incentivar a partição de todos.
+Essa foi a primeira _sprint_ em que os membros desenvolveram a aplicação e apesar da falta de conhecimento na tecnologia percebeu-se que o membro João Durso desenvolveu bem e tem habilidade para resolver problemas.
 
-Como SM, faltou cuidado em cobrar a execução das _dailies_ e isso é algo que não pode ocorrer novamente, sob risco de não cumprir o que foi planejado.
+Finalizando, não foram entregues todas as histórias planejadas, mas isso era já era esperado e, apesar disso, foi um bom início de projeto por já poder perceber o potencial dos membros.
