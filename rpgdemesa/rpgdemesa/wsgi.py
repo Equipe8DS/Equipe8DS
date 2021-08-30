@@ -1,5 +1,5 @@
 """
-WSGI config for equipe8ds project.
+WSGI config for rpgdemesa project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'equipe8ds.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rpgdemesa.settings')
 
 application = get_wsgi_application()
