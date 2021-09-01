@@ -25,3 +25,11 @@ class ItemViewSet(viewsets.ModelViewSet) :
         item.ativo = False
         item.save ()
         return Response ({'status': status.HTTP_200_OK})
+
+    def update(self, request, *args, **kwargs):
+        item = self.get_object ()
+        data = request.data
+        item.descricao = data["descricao"]
+        item.preco_sugerido = data["preco_sugerido"]
+        item.save()
+        return Response ({'status': status.HTTP_200_OK, 'descricao': item.descricao, 'preco_sugerido': item.preco_sugerido})    
