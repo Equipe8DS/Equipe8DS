@@ -21,6 +21,8 @@ from bot import views
 router = routers.DefaultRouter()
 router.register(r'personagem', views.PersonagemViewSet)
 router.register(r'item', views.ItemViewSet)
+router.register(r'cidade', views.CidadeViewSet)
+
 
 urlpatterns = [
     path('', include(router.urls)),

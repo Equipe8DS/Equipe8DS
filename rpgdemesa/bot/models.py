@@ -92,3 +92,10 @@ class Item (models.Model):
 
     def get_absolute_url(self):
         return reverse("item_detail", kwargs={"pk": self.pk})
+
+class Cidade(models.Model):
+    nome_cidade =  models.CharField (max_length=100, blank=False)
+    tesouro = models.FloatField (max_length=100, null=False)
+    governante =  models.CharField (max_length=100)
+    ativo = models.BooleanField(editable=False, default=True)
+           
