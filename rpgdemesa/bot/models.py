@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from django.conf import settings
 
 class Personagem (models.Model): 
     RACAS = [
@@ -46,6 +47,7 @@ class Personagem (models.Model):
     classe = models.CharField (max_length=100, choices = CLASSE, null=False)
     tipo = models.CharField (max_length=100, editable=False, default='Jogador', choices=[('jogador', 'Jogador'), ('npc', 'NPC')])
     ativo = models.BooleanField (editable=False, default=True)
+    dono = models.ForeignKey (settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
 
     class Meta:
         verbose_name = _("personagem")
@@ -57,3 +59,7 @@ class Personagem (models.Model):
     def get_absolute_url(self):
         return reverse("personagem_detail", kwargs={"pk": self.pk})
 
+    def save(self, force_insert = False, force_update = False, using = None, update_fields = None):
+        if (self.dono.is_staff) : 
+            self.tipo = 'npc'
+        super(Personagem, self).save()
