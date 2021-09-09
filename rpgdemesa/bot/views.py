@@ -13,3 +13,4 @@ class PersonagemViewSet (viewsets.ModelViewSet) :
         personagem.ativo = False
         personagem.save ()
         return Response ({'status': status.HTTP_200_OK})
+        
