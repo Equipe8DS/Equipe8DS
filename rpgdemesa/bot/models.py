@@ -54,7 +54,7 @@ class Personagem (models.Model):
         verbose_name_plural = _("personagens")
 
     def __str__(self):
-        return self.name
+        return self.nome
 
     def get_absolute_url(self):
         return reverse("personagem_detail", kwargs={"pk": self.pk})
@@ -63,3 +63,15 @@ class Personagem (models.Model):
         if (self.dono.is_staff) : 
             self.tipo = 'npc'
         super(Personagem, self).save()
+
+class Loja(models.Model):
+    nome = models.CharField (max_length=100, blank=False)
+    # cidade = models.CharField (max_length=100, blank=False, null=False)
+    responsavel = models.ForeignKey (Personagem, on_delete = models.CASCADE)
+    # estoque = models
+ 
+    def __str__(self):
+        return self.nome
+    def get_absolute_url(self):
+        return reverse("personagem_detail", kwargs={"pk": self.pk})
+
