@@ -62,14 +62,18 @@ class Personagem (models.Model):
     def save(self, force_insert = False, force_update = False, using = None, update_fields = None):
         if (self.dono.is_staff) : 
             self.tipo = 'npc'
-        super(Personagem, self).save()
+        super(Personagem, self).save()  
 
 class Loja(models.Model):
-    nome = models.CharField (max_length=100, blank=False)
+    nome = models.CharField (max_length=100, blank=False, verbose_name = 'Nome da Loja')
     # cidade = models.CharField (max_length=100, blank=False, null=False)
-    responsavel = models.ForeignKey (Personagem, on_delete = models.CASCADE)
+    responsavel = models.ForeignKey (Personagem, on_delete = models.CASCADE, verbose_name = 'Responsável', limit_choices_to={'ativo': True},)
     # estoque = models
- 
+
+    class Meta:
+        verbose_name = _("loja")
+        verbose_name_plural = _("lojas")
+
     def __str__(self):
         return self.nome
     def get_absolute_url(self):

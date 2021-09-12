@@ -16,17 +16,6 @@ class PersonagemViewSet (viewsets.ModelViewSet) :
         personagem.ativo = False
         personagem.save ()
         return Response ({'status': status.HTTP_200_OK})
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data = request.data)                        
-        serializer.is_valid(raise_exception = True)
-        serializer.data['tipo'] = 'npc'
-        print('TESTE')
-        usuario = request.user
-        if usuario.is_superuser:
-            print(usuario)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(request.data)
-        return Response (request.data, status = status.HTTP_201_CREATED, headers = headers)
 
 class LojaViewSet (viewsets.ModelViewSet) :
     queryset = Loja.objects.all()
