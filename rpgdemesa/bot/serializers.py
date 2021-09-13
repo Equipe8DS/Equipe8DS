@@ -3,9 +3,11 @@ from bot.models import Item
 from rest_framework import serializers
 
 class PersonagemSerializer (serializers.HyperlinkedModelSerializer) :
+    dono = serializers.HiddenField (default = serializers.CurrentUserDefault ())
+
     class Meta : 
         model = Personagem 
-        fields = ['nome', 'raca', 'classe', 'tipo', 'ativo']
+        fields = ['nome', 'raca', 'classe', 'tipo', 'ativo', 'dono']
 
 class ItemSerializer (serializers.HyperlinkedModelSerializer) :
     class Meta:
