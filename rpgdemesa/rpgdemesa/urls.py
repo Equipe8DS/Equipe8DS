@@ -20,6 +20,7 @@ from bot import views
 
 router = routers.DefaultRouter()
 router.register(r'personagem', views.PersonagemViewSet)
+router.register(r'item', views.ItemViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
