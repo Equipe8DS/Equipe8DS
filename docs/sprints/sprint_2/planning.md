@@ -8,11 +8,11 @@
 
 **Duração:** Sete dias
 
-**Pontos Planejados**: 
+**Pontos Planejados**: 10
 
 **Pontos Adicionados**: 15
 
-**Pontos Totais**: 
+**Pontos Totais**: 25
 
 -------
 
