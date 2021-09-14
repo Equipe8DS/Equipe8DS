@@ -1,1 +1,1 @@
-web: gunicorn equipe8ds.wsgi --log-file -
+web: gunicorn rpgdemesa.wsgi --log-file -
