@@ -1,0 +1,1 @@
+web: gunicorn equipe8ds.wsgi --log-file -
