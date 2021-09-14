@@ -47,15 +47,15 @@ is_prod = os.environ.get('IS_HEROKU', None)
 if is_prod:
 
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('Database', None),
-        'USER': os.environ.get('User', None),
-        'PASSWORD': os.environ.get('Password'),
-        'HOST': os.environ.get('Host'),
-        'PORT': os.environ.get('Port', None)
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('Database', None),
+            'USER': os.environ.get('User', None),
+            'PASSWORD': os.environ.get('Password'),
+            'HOST': os.environ.get('Host'),
+            'PORT': '',
+        }
     }
-}
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
