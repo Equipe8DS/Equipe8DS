@@ -49,7 +49,7 @@ if is_prod:
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DATABASE_NAME', None),
+        'NAME': os.environ.get('Database', None),
         'USER': os.environ.get('User', None),
         'PASSWORD': os.environ.get('Password'),
         'HOST': os.environ.get('Host'),
