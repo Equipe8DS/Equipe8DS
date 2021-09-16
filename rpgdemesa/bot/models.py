@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 
 class Personagem (models.Model): 
     RACAS = [
@@ -84,10 +85,10 @@ class Item (models.Model):
         ('luxo', 'Luxo')
     ]
     nome = models.CharField (max_length=100, blank=False, )
-    preco_sugerido = models.FloatField (max_length=100, null=False)
+    preco_sugerido = models.FloatField (max_length=100, null=False, verbose_name='Preço Sugerido')
     qualidade = models.CharField (max_length=100, choices = QUALIDADE, null=False)
     categoria = models.CharField (max_length=100, choices = CATEGORIA, null=False)
-    descricao = models.CharField (max_length=100, blank=False, )
+    descricao = models.CharField (max_length=100, blank=False, verbose_name='Descrição' )
     ativo = models.BooleanField(editable=False, default=True)
 
     class Meta:
@@ -100,3 +101,8 @@ class Item (models.Model):
     def get_absolute_url(self):
         return reverse("item_detail", kwargs={"pk": self.pk})
 
+class Jogador(AbstractUser): 
+    nome = models.CharField (max_length = 100,)
+    ativo = models.BooleanField (editable = False, default = True)
+    #perfil = models.CharField (editable = False, default = 'jogador')
+    

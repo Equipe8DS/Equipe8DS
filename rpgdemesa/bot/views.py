@@ -1,3 +1,4 @@
+from bot.serializers import JogadorSerializer
 from bot.serializers import PersonagemSerializer
 from bot.serializers import ItemSerializer
 from django.shortcuts import render
@@ -5,6 +6,7 @@ from rest_framework import serializers,viewsets,status
 from rest_framework.response import Response 
 from bot.models import Personagem
 from bot.models import Item
+from bot.models import Jogador
 
 class PersonagemViewSet (viewsets.ModelViewSet) : 
     queryset = Personagem.objects.all ()
@@ -33,3 +35,9 @@ class ItemViewSet(viewsets.ModelViewSet) :
         item.preco_sugerido = data["preco_sugerido"]
         item.save()
         return Response ({'status': status.HTTP_200_OK, 'descricao': item.descricao, 'preco_sugerido': item.preco_sugerido})    
+
+class JogadorViewSet(viewsets.ModelViewSet) :
+    queryset = Jogador.objects.all() 
+    serializer_class = JogadorSerializer
+
+    
