@@ -4,9 +4,11 @@ from bot.models import Cidade
 from rest_framework import serializers
 
 class PersonagemSerializer (serializers.HyperlinkedModelSerializer) :
+    dono = serializers.HiddenField (default = serializers.CurrentUserDefault ())
+
     class Meta : 
         model = Personagem 
-        fields = ['nome', 'raca', 'classe', 'tipo', 'ativo']
+        fields = ['nome', 'raca', 'classe', 'tipo', 'ativo', 'dono']
 
 class ItemSerializer (serializers.HyperlinkedModelSerializer) :
     class Meta:
@@ -16,4 +18,4 @@ class ItemSerializer (serializers.HyperlinkedModelSerializer) :
 class CidadeSerializer (serializers.HyperlinkedModelSerializer) :
     class Meta:
         model = Cidade
-        fields = ['nome_cidade','tesouro','governante','ativo']        
+        fields = ['nome_cidade','tesouro','governante','ativo']              
