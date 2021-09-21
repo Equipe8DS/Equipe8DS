@@ -84,10 +84,10 @@ class Item (models.Model):
         ('luxo', 'Luxo')
     ]
     nome = models.CharField (max_length=100, blank=False, )
-    preco_sugerido = models.FloatField (max_length=100, null=False)
+    preco_sugerido = models.FloatField (max_length=100, null=False, verbose_name='Preço Sugerido')
     qualidade = models.CharField (max_length=100, choices = QUALIDADE, null=False)
     categoria = models.CharField (max_length=100, choices = CATEGORIA, null=False)
-    descricao = models.CharField (max_length=100, blank=False, )
+    descricao = models.CharField (max_length=100, blank=False, verbose_name='Descrição')
     ativo = models.BooleanField(editable=False, default=True)
 
     class Meta:
