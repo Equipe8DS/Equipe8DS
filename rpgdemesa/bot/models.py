@@ -54,15 +54,51 @@ class Personagem (models.Model):
         verbose_name_plural = _("personagens")
 
     def __str__(self):
-        return self.nome
+        return self.name
 
     def get_absolute_url(self):
         return reverse("personagem_detail", kwargs={"pk": self.pk})
-
+        
     def save(self, force_insert = False, force_update = False, using = None, update_fields = None):
         if (self.dono.is_staff) : 
             self.tipo = 'npc'
-        super(Personagem, self).save()  
+        super(Personagem, self).save()        
+
+class Item (models.Model):
+    QUALIDADE = [
+        (None, '<selecione>'),
+        ('ruim', 'Ruim'),
+        ('pobre', 'Pobre'),
+        ('medio', 'Médio'),
+        ('bom', 'Bom'),
+        ('excelente', 'Excelente')
+    ]
+    CATEGORIA = [
+        (None, '<selecione>'),
+        ('alimentos', 'Alimentos'),
+        ('transporte', 'Transporte'),
+        ('academico', 'Acadêmico'),
+        ('agricultura', 'Agricultura'),
+        ('casa', 'Casa'),
+        ('equipamento', 'Equipamento'),
+        ('luxo', 'Luxo')
+    ]
+    nome = models.CharField (max_length=100, blank=False, )
+    preco_sugerido = models.FloatField (max_length=100, null=False)
+    qualidade = models.CharField (max_length=100, choices = QUALIDADE, null=False)
+    categoria = models.CharField (max_length=100, choices = CATEGORIA, null=False)
+    descricao = models.CharField (max_length=100, blank=False, )
+    ativo = models.BooleanField(editable=False, default=True)
+
+    class Meta:
+        verbose_name = _("item")
+        verbose_name_plural = _("itens")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("item_detail", kwargs={"pk": self.pk})
 
 class Loja(models.Model):
     nome = models.CharField (max_length=100, blank=False, verbose_name = 'Nome da Loja')
@@ -78,4 +114,3 @@ class Loja(models.Model):
         return self.nome
     def get_absolute_url(self):
         return reverse("personagem_detail", kwargs={"pk": self.pk})
-
