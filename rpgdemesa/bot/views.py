@@ -5,6 +5,8 @@ from rest_framework import serializers,viewsets,status
 from rest_framework.response import Response 
 from bot.models import Personagem
 from bot.models import Item
+from bot.models import Cidade
+from bot.serializers import CidadeSerializer
 
 class PersonagemViewSet (viewsets.ModelViewSet) : 
     queryset = Personagem.objects.all ()
@@ -32,4 +34,14 @@ class ItemViewSet(viewsets.ModelViewSet) :
         item.descricao = data["descricao"]
         item.preco_sugerido = data["preco_sugerido"]
         item.save()
-        return Response ({'status': status.HTTP_200_OK, 'descricao': item.descricao, 'preco_sugerido': item.preco_sugerido})    
+        return Response ({'status': status.HTTP_200_OK, 'descricao': item.descricao, 'preco_sugerido': item.preco_sugerido})
+        
+class CidadeViewSet(viewsets.ModelViewSet) :
+    queryset = Cidade.objects.all()
+    serializer_class = CidadeSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        cidade = self.get_object ()
+        cidade.ativo = False
+        cidade.save ()
+        return Response ({'status': status.HTTP_200_OK})                 
