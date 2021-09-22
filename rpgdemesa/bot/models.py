@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.urls import reverse
 from django.utils.translation import gettext as _
+from rest_framework.reverse import reverse
 
 
 class Personagem(models.Model):
@@ -69,6 +69,13 @@ class Personagem(models.Model):
         super(Personagem, self).save()
 
 
+class Cidade(models.Model):
+    nome_cidade = models.CharField(max_length=100, blank=False)
+    tesouro = models.FloatField(max_length=100, null=False)
+    governante = models.ForeignKey(Personagem, on_delete=models.CASCADE)
+    ativo = models.BooleanField(editable=False, default=True)
+
+
 class Item(models.Model):
     QUALIDADE = [
         (None, '<selecione>'),
@@ -89,10 +96,10 @@ class Item(models.Model):
         ('luxo', 'Luxo')
     ]
     nome = models.CharField(max_length=100, blank=False, )
-    preco_sugerido = models.FloatField(max_length=100, null=False, verbose_name='Preço Sugerido')
+    preco_sugerido = models.FloatField(max_length=100, null=False)
     qualidade = models.CharField(max_length=100, choices=QUALIDADE, null=False)
     categoria = models.CharField(max_length=100, choices=CATEGORIA, null=False)
-    descricao = models.CharField(max_length=100, blank=False, verbose_name='Descrição')
+    descricao = models.CharField(max_length=100, blank=False, )
     ativo = models.BooleanField(editable=False, default=True)
 
     class Meta:

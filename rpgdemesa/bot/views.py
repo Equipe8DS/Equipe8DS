@@ -1,12 +1,11 @@
 from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
-from rest_framework.renderers import TemplateHTMLRenderer
 
+from bot.models import Cidade, Jogador
 from bot.models import Item
-from bot.models import Jogador
 from bot.models import Personagem
+from bot.serializers import CidadeSerializer, JogadorSerializer
 from bot.serializers import ItemSerializer
-from bot.serializers import JogadorSerializer
 from bot.serializers import PersonagemSerializer
 
 
@@ -41,6 +40,18 @@ class ItemViewSet(viewsets.ModelViewSet):
         item.save()
         return Response(
             {'status': status.HTTP_200_OK, 'descricao': item.descricao, 'preco_sugerido': item.preco_sugerido})
+
+
+class CidadeViewSet(viewsets.ModelViewSet):
+    queryset = Cidade.objects.all()
+    serializer_class = CidadeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs):
+        cidade = self.get_object()
+        cidade.ativo = False
+        cidade.save()
+        return Response({'status': status.HTTP_200_OK})
 
 
 class JogadorViewSet(viewsets.ModelViewSet):

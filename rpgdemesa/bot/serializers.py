@@ -1,8 +1,8 @@
 from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 
+from bot.models import Cidade, Jogador
 from bot.models import Item
-from bot.models import Jogador
 from bot.models import Personagem
 
 
@@ -18,6 +18,12 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Item
         fields = ['nome', 'preco_sugerido', 'qualidade', 'categoria', 'descricao', 'ativo']
+
+
+class CidadeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Cidade
+        fields = ['nome_cidade', 'tesouro', 'governante', 'ativo']
 
 
 class JogadorSerializer(serializers.HyperlinkedModelSerializer):
