@@ -1,12 +1,15 @@
 from bot.serializers import PersonagemSerializer
 from bot.serializers import ItemSerializer
 from bot.serializers import LojaSerializer
+from bot.serializers import CidadeSerializer
 from django.shortcuts import render
 from rest_framework import serializers,viewsets,status, permissions
 from rest_framework.response import Response 
 from bot.models import Personagem
 from bot.models import Item
 from bot.models import Loja
+from bot.models import Cidade
+
 
 class PersonagemViewSet (viewsets.ModelViewSet) : 
     queryset = Personagem.objects.all ()
@@ -47,3 +50,14 @@ class LojaViewSet (viewsets.ModelViewSet) :
         else :
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
+        return Response ({'status': status.HTTP_200_OK, 'descricao': item.descricao, 'preco_sugerido': item.preco_sugerido})
+        
+class CidadeViewSet(viewsets.ModelViewSet) :
+    queryset = Cidade.objects.all()
+    serializer_class = CidadeSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        cidade = self.get_object ()
+        cidade.ativo = False
+        cidade.save ()
+        return Response ({'status': status.HTTP_200_OK})                 

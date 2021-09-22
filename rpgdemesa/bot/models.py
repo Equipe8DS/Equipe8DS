@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from django.conf import settings
 
+
 class Personagem (models.Model): 
     RACAS = [
         (None, '<selecione>'), 
@@ -62,7 +63,13 @@ class Personagem (models.Model):
     def save(self, force_insert = False, force_update = False, using = None, update_fields = None):
         if (self.dono.is_staff) : 
             self.tipo = 'npc'
-        super(Personagem, self).save()        
+        super(Personagem, self).save()
+        
+class Cidade(models.Model):
+    nome_cidade =  models.CharField (max_length=100, blank=False)
+    tesouro = models.FloatField (max_length=100, null=False)
+    governante =  models.ForeignKey(Personagem, on_delete=models.CASCADE)
+    ativo = models.BooleanField(editable=False, default=True)                
 
 class Item (models.Model):
     QUALIDADE = [
