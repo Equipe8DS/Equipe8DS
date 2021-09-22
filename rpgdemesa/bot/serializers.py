@@ -16,11 +16,13 @@ class ItemSerializer (serializers.HyperlinkedModelSerializer) :
         model = Item
         fields = ['nome', 'preco_sugerido', 'qualidade', 'categoria', 'descricao', 'ativo']
 
-class LojaSerializer(serializers.HyperlinkedModelSerializer) :
-    class Meta :
-        model = Loja
-        fields = ['nome', 'responsavel']
 class CidadeSerializer (serializers.HyperlinkedModelSerializer) :
     class Meta:
         model = Cidade
-        fields = ['nome_cidade','tesouro','governante','ativo']              
+        fields = ['nome_cidade','tesouro','governante','ativo']     
+
+class LojaSerializer(serializers.HyperlinkedModelSerializer) :
+    class Meta :
+        model = Loja
+        fields = ['nome', 'responsavel', 'cidade', ]
+         

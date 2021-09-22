@@ -55,7 +55,7 @@ class Personagem (models.Model):
         verbose_name_plural = _("personagens")
 
     def __str__(self):
-        return self.name
+        return self.nome
 
     def get_absolute_url(self):
         return reverse("personagem_detail", kwargs={"pk": self.pk})
@@ -66,10 +66,20 @@ class Personagem (models.Model):
         super(Personagem, self).save()
         
 class Cidade(models.Model):
-    nome_cidade =  models.CharField (max_length=100, blank=False)
+    nome_cidade =  models.CharField (max_length=100, blank=False, verbose_name='Cidade')
     tesouro = models.FloatField (max_length=100, null=False)
-    governante =  models.ForeignKey(Personagem, on_delete=models.CASCADE)
-    ativo = models.BooleanField(editable=False, default=True)                
+    governante =  models.ForeignKey(Personagem, on_delete=models.CASCADE, limit_choices_to={'ativo': True})
+    ativo = models.BooleanField(editable=False, default=True)       
+
+    class Meta:
+        verbose_name = _("cidade")
+        verbose_name_plural = _("cidades")
+
+    def __str__(self):
+        return self.nome_cidade
+
+    def get_absolute_url(self):
+        return reverse("cidade_detail", kwargs={"pk": self.pk})
 
 class Item (models.Model):
     QUALIDADE = [
@@ -102,14 +112,14 @@ class Item (models.Model):
         verbose_name_plural = _("itens")
 
     def __str__(self):
-        return self.name
+        return self.nome
 
     def get_absolute_url(self):
         return reverse("item_detail", kwargs={"pk": self.pk})
 
 class Loja(models.Model):
     nome = models.CharField (max_length=100, blank=False, verbose_name = 'Nome da Loja')
-    # cidade = models.CharField (max_length=100, blank=False, null=False)
+    cidade = models.ForeignKey (Cidade, on_delete=models.CASCADE)
     responsavel = models.ForeignKey (Personagem, on_delete = models.CASCADE, verbose_name = 'Responsável', limit_choices_to={'ativo': True},)
     # estoque = models
 
