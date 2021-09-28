@@ -36,7 +36,7 @@ def send_info_personagem(message):
 
     if not personagem_name:
         bot.send_chat_action(cid, 'typing')
-        bot.send_message(cid, "Esse personagem não existe")
+        bot.send_message(cid, "Insira o nome do personagem que deseja visualizar.")
     else:
         try:
             info = BotUtil.info_detalhada_personagem(response_dict[personagem_name])
@@ -44,7 +44,36 @@ def send_info_personagem(message):
             bot.send_message(cid, info, parse_mode="Markdown")
         except:
             bot.send_chat_action(cid, 'typing')
-            bot.send_message(cid, "Esse personagem não existe.", parse_mode="Markdown")
+            bot.send_message(cid, "Houve um erro ao consultar o personagem.", parse_mode="Markdown")
+
+@bot.message_handler(commands=['itens'])
+def send_itens_lista(message):
+    cid = message.chat.id
+    results = BotController.buscar_itens()
+    response = BotUtil.gerar_lista_itens(results)
+    bot.send_chat_action(cid, 'typing')
+    bot.reply_to(message, "Itens registrados: \n" + response, parse_mode="Markdown")
+
+@bot.message_handler(commands=['item'])
+def send_info_item(message):
+    cid = message.chat.id
+    results = BotController.buscar_itens()
+    response_dict = BotUtil.gerar_dicionario_itens(results)
+
+    item_name = ' '.join(message.text.split(' ')[1:])
+    
+    if not item_name:
+        bot.send_chat_action(cid, 'typing')
+        bot.send_message(cid, "Insira o nome do item que deseja visualizar.")
+    else:
+        try:
+            info = BotUtil.info_detalhada_item(response_dict[item_name])
+            bot.send_chat_action(cid, 'typing')
+            bot.send_message(cid, info, parse_mode="Markdown")
+        except Exception as e:
+            print(e)
+            bot.send_chat_action(cid, 'typing')
+            bot.send_message(cid, "Houve um erro ao consultar o item.", parse_mode="Markdown")
 
 bot.polling()
 
