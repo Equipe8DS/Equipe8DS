@@ -8,7 +8,6 @@ from bot.serializers import CidadeSerializer, JogadorSerializer
 from bot.serializers import ItemSerializer
 from bot.serializers import PersonagemSerializer
 
-
 class PersonagemViewSet(viewsets.ModelViewSet):
     queryset = Personagem.objects.all()
     serializer_class = PersonagemSerializer
