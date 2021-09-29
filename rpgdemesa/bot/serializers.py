@@ -23,7 +23,7 @@ class ItemSerializer(serializers.HyperlinkedModelSerializer):
 class CidadeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Cidade
-        fields = ['nome_cidade', 'tesouro', 'governante', 'ativo']
+        fields = ['nome', 'tesouro', 'governante', 'ativo']
 
 
 class JogadorSerializer(serializers.HyperlinkedModelSerializer):

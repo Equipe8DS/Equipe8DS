@@ -58,7 +58,7 @@ class Personagem(models.Model):
         verbose_name_plural = _("personagens")
 
     def __str__(self):
-        return self.name
+        return self.nome
 
     def get_absolute_url(self):
         return reverse("personagem_detail", kwargs={"pk": self.pk})
@@ -70,7 +70,7 @@ class Personagem(models.Model):
 
 
 class Cidade(models.Model):
-    nome_cidade = models.CharField(max_length=100, blank=False)
+    nome = models.CharField(max_length=100, blank=False)
     tesouro = models.FloatField(max_length=100, null=False)
     governante = models.ForeignKey(Personagem, on_delete=models.CASCADE)
     ativo = models.BooleanField(editable=False, default=True)

@@ -1,36 +1,28 @@
 
 class BotUtil:
-    def gerar_lista_personagens(personagens):
+    def gerar_lista_por_nomes(list):
         i = 1
         response = ""
-        for personagem in personagens:
-            response = response + str(i) + " - " + personagem["nome"] + "\n"
+        for object in list:
+            response = response + str(i) + " - " + object["nome"] + "\n"
             i = i+1
         return response
 
-    def gerar_dicionario_personagens(list):
-        list_dict = {personagem['nome']: personagem for personagem in list}
+    def gerar_dicionario_lista_por_nome(list):
+        list_dict = {object['nome']: object for object in list}
         return list_dict
 
     def info_detalhada_personagem(personagem):
         info = 'Nome: ' + personagem['nome'] + '\n' + 'Raça: ' + personagem['raca'] + '\n' + 'Classe: ' + personagem['classe'] + '\n' + 'Tipo: ' + personagem['tipo'] + '\n'
         return info
 
-    def gerar_lista_itens(itens):
-        i = 1
-        response = ""
-        for item in itens:
-            response = response + str(i) + " - " + item["nome"] + "\n"
-            i = i+1
-        return response
-
-    def gerar_dicionario_itens(list):
-        list_dict = {item['nome']: item for item in list}
-        return list_dict
-
     def info_detalhada_item(item):
         info = 'Nome: ' + item['nome'] + '\n' + 'Preço Sugerido: ' + str(item['preco_sugerido']) + ' peças de ouro' + '\n' + 'Qualidade: ' + BotUtil.imprime_qualidade(item['qualidade']) + '\n' + 'Categoria: ' + BotUtil.imprime_categoria(item['categoria']) + '\n' + 'Descrição: ' + item['descricao'] + '\n'
-        print(info)
+        return info
+
+
+    def info_detalhada_cidade(cidade):
+        info = 'Nome: ' + cidade['nome'] + '\n' + 'Tesouro: ' + str(cidade['tesouro']) + ' peças de ouro' + '\n'
         return info
 
     def imprime_qualidade(qualidade):

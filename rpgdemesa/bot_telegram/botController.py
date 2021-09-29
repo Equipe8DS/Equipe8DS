@@ -32,3 +32,12 @@ class BotController:
         a_json_object = json.loads(request.content)
         list_from_json = a_json_object["results"]
         return list_from_json
+
+    def buscar_cidade():
+        load_dotenv()
+
+        request = requests.get(BotController.URL_API() + '/cidade/', auth=(BotController.LOGIN_AUTH(), BotController.PASSW_AUTH()))
+        print(request)
+        a_json_object = json.loads(request.content)
+        list_from_json = a_json_object["results"]
+        return list_from_json
