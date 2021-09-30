@@ -24,6 +24,8 @@ router.register(r'personagem', views.PersonagemViewSet)
 router.register(r'item', views.ItemViewSet)
 router.register(r'cidade', views.CidadeViewSet)
 router.register(r'jogador', views.JogadorViewSet)
+router.register(r'inventario', views.ItemPersonagemViewSet)
+
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -4,9 +4,20 @@ from rest_framework.response import Response
 from bot.models import Cidade, Jogador
 from bot.models import Item
 from bot.models import Personagem
+from bot.models import ItemPersonagem
 from bot.serializers import CidadeSerializer, JogadorSerializer
 from bot.serializers import ItemSerializer
 from bot.serializers import PersonagemSerializer
+from bot.serializers import ItemPersonagemSerializer
+from rest_framework.decorators import api_view
+from django_filters.rest_framework import DjangoFilterBackend
+
+class ItemPersonagemViewSet(viewsets.ModelViewSet):
+    queryset = ItemPersonagem.objects.all()
+    serializer_class = ItemPersonagemSerializer
+    #permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['personagem_id']
 
 class PersonagemViewSet(viewsets.ModelViewSet):
     queryset = Personagem.objects.all()
