@@ -4,26 +4,37 @@ from rest_framework import serializers
 from bot.models import Cidade, Jogador
 from bot.models import Item
 from bot.models import Personagem
-
+from bot.models import ItemPersonagem
 
 class PersonagemSerializer(serializers.HyperlinkedModelSerializer):
     dono = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Personagem
-        fields = ['nome', 'raca', 'classe', 'tipo', 'ativo', 'dono']
-
+        fields = ['pk', 'nome', 'raca', 'classe', 'tipo', 'ativo', 'dono']
+        depth = 1
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Item
-        fields = ['nome', 'preco_sugerido', 'qualidade', 'categoria', 'descricao', 'ativo']
+        fields = ['pk', 'nome', 'preco_sugerido', 'qualidade', 'categoria', 'descricao', 'ativo']
+
+
+class ItemPersonagemSerializer(serializers.ModelSerializer):
+    item_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Item.objects.all(), source='item')
+    item = ItemSerializer(read_only=True)
+    personagem_id = serializers.PrimaryKeyRelatedField(queryset=Personagem.objects.all(), source='personagem')
+    
+    class Meta:
+        model = ItemPersonagem
+        fields = ['pk', 'item_id', 'item', 'personagem_id', 'quantidade']
+        depth = 1
 
 
 class CidadeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Cidade
-        fields = ['nome', 'tesouro', 'governante', 'ativo']
+        fields = ['pk', 'nome', 'tesouro', 'governante', 'ativo']
 
 
 class JogadorSerializer(serializers.HyperlinkedModelSerializer):
@@ -31,8 +42,9 @@ class JogadorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Jogador
-        fields = ['nome', 'is_active', 'email', 'password', 'username']
+        fields = ['pk', 'nome', 'is_active', 'email', 'password', 'username']
 
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data.get('password'))
         return super(JogadorSerializer, self).create(validated_data)
+
