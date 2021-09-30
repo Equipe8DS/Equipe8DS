@@ -15,7 +15,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 class ItemPersonagemViewSet(viewsets.ModelViewSet):
     queryset = ItemPersonagem.objects.all()
     serializer_class = ItemPersonagemSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['personagem_id']
 
