@@ -1,5 +1,7 @@
 from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
+from django.http.response import JsonResponse
+from rest_framework.parsers import JSONParser 
 
 from bot.models import Cidade, Jogador
 from bot.models import Item
@@ -12,10 +14,29 @@ from bot.serializers import ItemPersonagemSerializer
 from rest_framework.decorators import api_view
 from django_filters.rest_framework import DjangoFilterBackend
 
+@api_view(['PUT'])
+def remover_item_inventario(request, pk):
+    try:
+        item_personagem = ItemPersonagem.objects.get(pk=pk) 
+    except ItemPersonagem.DoesNotExist: 
+        return JsonResponse({'message': 'O item não está no inventário.'}, status=status.HTTP_404_NOT_FOUND) 
+ 
+    item_personagem_data = JSONParser().parse(request)
+    item_personagem_serializer = ItemPersonagemSerializer(item_personagem, data=item_personagem_data)
+
+    if item_personagem_serializer.is_valid():
+        if item_personagem_serializer.data['quantidade'] == 0:
+            item_personagem.delete()
+        else:
+            item_personagem_serializer.save()
+        return JsonResponse(item_personagem_serializer.data) 
+    return JsonResponse(item_personagem_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+
 class ItemPersonagemViewSet(viewsets.ModelViewSet):
     queryset = ItemPersonagem.objects.all()
     serializer_class = ItemPersonagemSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    #permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['personagem_id']
 
