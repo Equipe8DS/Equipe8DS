@@ -120,6 +120,7 @@ class Item (models.Model):
 class Loja(models.Model):
     nome = models.CharField (max_length=100, blank=False, verbose_name = 'Nome da Loja')
     cidade = models.ForeignKey (Cidade, on_delete=models.CASCADE)
+    caixa = models.FloatField (max_length=100, null=False, verbose_name='Caixa')
     responsavel = models.ForeignKey (Personagem, on_delete = models.CASCADE, verbose_name = 'Responsável', limit_choices_to={'ativo': True},)
     # estoque = models
 
