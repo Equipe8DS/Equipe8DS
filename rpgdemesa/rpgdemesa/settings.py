@@ -10,17 +10,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from pathlib import Path
 import os
-import environ
+from pathlib import Path
+
 import dj_database_url
+import environ
 
 env = environ.Env()
 environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -39,7 +39,6 @@ DATABASES = {
     }
 }
 
-
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
@@ -47,7 +46,6 @@ DATABASES['default'].update(db_from_env)
 DEBUG = True
 
 ALLOWED_HOSTS = ['rpg-api-django.herokuapp.com', '0.0.0.0', 'localhost', '127.0.0.1']
-
 
 # Application definition
 
@@ -60,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'bot',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -92,7 +91,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rpgdemesa.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
@@ -111,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -124,7 +121,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -141,5 +137,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
+
+# AUTH
+AUTH_USER_MODEL = 'bot.Jogador'
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'bot.serializers.JogadorSerializer',
+}
+LOGIN_REDIRECT_URL = 'jogador'
+LOGOUT_REDIRECT_URL = 'api/login'
