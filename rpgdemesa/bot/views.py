@@ -6,11 +6,15 @@ from rest_framework.parsers import JSONParser
 from bot.models import Cidade, Jogador
 from bot.models import Item
 from bot.models import Personagem
+from bot.models import Loja
 from bot.models import ItemPersonagem
+from bot.models import Estoque
 from bot.serializers import CidadeSerializer, JogadorSerializer
 from bot.serializers import ItemSerializer
 from bot.serializers import PersonagemSerializer
 from bot.serializers import ItemPersonagemSerializer
+from bot.serializers import LojaSerializer
+from bot.serializers import EstoqueSerializer
 from rest_framework.decorators import api_view
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -103,3 +107,28 @@ class JogadorViewSet(viewsets.ModelViewSet):
         jogador.is_active = False
         jogador.save()
         return Response({'status': status.HTTP_200_OK})
+
+class LojaViewSet (viewsets.ModelViewSet) :
+    queryset = Loja.objects.all()
+    serializer_class = LojaSerializer
+          
+    def get_permissions(self):
+    
+        if self.action != 'list' :
+            permission_classes = [permissions.IsAdminUser]
+        else :
+            permission_classes = [permissions.AllowAny]
+        return [permission() for permission in permission_classes]
+
+    def destroy(self, request, *args, **kwargs):
+        loja = self.get_object()
+        loja.ativo = False
+        loja.save()
+        return Response({'status': status.HTTP_200_OK})       
+
+class EstoqueViewSet(viewsets.ModelViewSet):
+    queryset = Estoque.objects.all()
+    serializer_class = EstoqueSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    
