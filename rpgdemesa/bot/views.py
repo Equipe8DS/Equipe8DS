@@ -8,11 +8,13 @@ from bot.models import Item
 from bot.models import Personagem
 from bot.models import Loja
 from bot.models import ItemPersonagem
+from bot.models import Estoque
 from bot.serializers import CidadeSerializer, JogadorSerializer
 from bot.serializers import ItemSerializer
 from bot.serializers import PersonagemSerializer
 from bot.serializers import ItemPersonagemSerializer
 from bot.serializers import LojaSerializer
+from bot.serializers import EstoqueSerializer
 from rest_framework.decorators import api_view
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -118,3 +120,10 @@ class LojaViewSet (viewsets.ModelViewSet) :
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
         return Response ({'status': status.HTTP_200_OK, 'descricao': item.descricao, 'preco_sugerido': item.preco_sugerido})        
+
+class EstoqueViewSet(viewsets.ModelViewSet):
+    queryset = Estoque.objects.all()
+    serializer_class = EstoqueSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    

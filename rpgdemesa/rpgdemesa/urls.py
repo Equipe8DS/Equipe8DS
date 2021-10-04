@@ -27,6 +27,7 @@ router.register(r'loja', views.LojaViewSet)
 router.register(r'cidade', views.CidadeViewSet)
 router.register(r'jogador', views.JogadorViewSet)
 router.register(r'inventario', views.ItemPersonagemViewSet)
+router.register(r'estoque', views.EstoqueViewSet)
 
 
 urlpatterns = [

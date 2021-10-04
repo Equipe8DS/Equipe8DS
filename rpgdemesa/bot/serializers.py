@@ -6,6 +6,7 @@ from bot.models import Item
 from bot.models import Personagem
 from bot.models import Loja
 from bot.models import ItemPersonagem
+from bot.models import Estoque
 
 class PersonagemSerializer(serializers.HyperlinkedModelSerializer):
     dono = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -49,7 +50,19 @@ class JogadorSerializer(serializers.HyperlinkedModelSerializer):
         validated_data['password'] = make_password(validated_data.get('password'))
         return super(JogadorSerializer, self).create(validated_data)
 
+
+class EstoqueSerializer(serializers.HyperlinkedModelSerializer) :
+    loja_id = serializers.PrimaryKeyRelatedField(queryset=Loja.objects.all(), source='loja')
+    item_id = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all(), source='item')
+
+    class Meta :
+        model = Estoque
+        fields = ['item_id', 'quantidade_item', 'preco_item', 'loja_id', ]
+
 class LojaSerializer(serializers.HyperlinkedModelSerializer) :
+    itens = EstoqueSerializer (read_only=True) 
+
     class Meta :
         model = Loja
-        fields = ['nome', 'responsavel', 'cidade', ]
+        fields = ['nome', 'responsavel', 'cidade', 'itens', 'caixa']
+
