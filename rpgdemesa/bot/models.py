@@ -155,6 +155,7 @@ class Loja(models.Model):
     caixa = models.FloatField (max_length=100, null=False, verbose_name='Caixa')
     responsavel = models.ForeignKey (Personagem, on_delete = models.CASCADE, verbose_name = 'Responsável', limit_choices_to={'ativo': True},)
     estok = models.ManyToManyField (Item, through = 'Estoque')
+    ativo = models.BooleanField(editable=False, default=True)
 
     class Meta:
         verbose_name = _("loja")
@@ -168,8 +169,8 @@ class Loja(models.Model):
 class Estoque(models.Model):
     quantidade_item = models.IntegerField (null=False, verbose_name= 'Quantidade de Itens')
     preco_item = models.FloatField (null=False, verbose_name='Preço do Item')
-    loja = models.ForeignKey (Loja, on_delete = models.CASCADE)
-    item = models.ForeignKey (Item, on_delete = models.CASCADE)
+    loja = models.ForeignKey (Loja, on_delete = models.CASCADE, limit_choices_to={'ativo': True},)
+    item = models.ForeignKey (Item, on_delete = models.CASCADE, limit_choices_to={'ativo': True},)
 
     class Meta:
         verbose_name = _("estoque")

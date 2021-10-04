@@ -52,17 +52,15 @@ class JogadorSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EstoqueSerializer(serializers.HyperlinkedModelSerializer) :
-    loja_id = serializers.PrimaryKeyRelatedField(queryset=Loja.objects.all(), source='loja')
-    item_id = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all(), source='item')
 
     class Meta :
         model = Estoque
-        fields = ['item_id', 'quantidade_item', 'preco_item', 'loja_id', ]
+        fields = ['item', 'quantidade_item', 'preco_item', 'loja',]
 
 class LojaSerializer(serializers.HyperlinkedModelSerializer) :
     itens = EstoqueSerializer (read_only=True) 
 
     class Meta :
         model = Loja
-        fields = ['nome', 'responsavel', 'cidade', 'itens', 'caixa']
+        fields = ['nome', 'responsavel', 'cidade', 'itens', 'caixa', 'ativo']
 

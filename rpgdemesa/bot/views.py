@@ -119,7 +119,12 @@ class LojaViewSet (viewsets.ModelViewSet) :
         else :
             permission_classes = [permissions.AllowAny]
         return [permission() for permission in permission_classes]
-        return Response ({'status': status.HTTP_200_OK, 'descricao': item.descricao, 'preco_sugerido': item.preco_sugerido})        
+
+    def destroy(self, request, *args, **kwargs):
+        loja = self.get_object()
+        loja.ativo = False
+        loja.save()
+        return Response({'status': status.HTTP_200_OK})       
 
 class EstoqueViewSet(viewsets.ModelViewSet):
     queryset = Estoque.objects.all()
