@@ -29,7 +29,8 @@ def remover_item_inventario(request, pk):
         return JsonResponse({'message': 'O item não está no inventário.'}, status=status.HTTP_404_NOT_FOUND)
 
     item_personagem_data = JSONParser().parse(request)
-    item_personagem_serializer = ItemPersonagemSerializer(item_personagem, data=item_personagem_data)
+    item_personagem_serializer = ItemPersonagemSerializer(
+        item_personagem, data=item_personagem_data)
 
     if item_personagem_serializer.is_valid():
         if item_personagem_serializer.data['quantidade'] == 0:
@@ -153,8 +154,28 @@ class EstoqueViewSet(viewsets.ModelViewSet):
         except ObjectDoesNotExist:
             loja = Loja.objects.get(pk=id_loja)
             item = Item.objects.get(pk=id_item)
-            preco = float(request.data['preco']) if ('preco' in request.data) else item.preco_sugerido
+            preco = float(request.data['preco']) if (
+                'preco' in request.data) else item.preco_sugerido
 
-            estoque = Estoque(loja=loja, item=item, quantidade_item=quantidade, preco_item=preco)
+            estoque = Estoque(loja=loja, item=item,
+                              quantidade_item=quantidade, preco_item=preco)
             estoque.save()
             return JsonResponse({'message': 'Item adicionado ao estoque'}, status=status.HTTP_201_CREATED)
+
+    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='remove-item-loja',
+            url_name='remove_item_loja', detail=False)
+    def remove_item_loja(self, request):
+        id_loja = request.data['idLoja']
+        id_item = request.data['idItem']
+        quantidade = int(request.data['quantidade'])
+        estoque = Estoque.objects.get(loja=id_loja, item=id_item)
+        nova_quantidade = estoque.quantidade_item - quantidade
+
+        if nova_quantidade <= 0:
+            estoque.delete()
+
+        else:
+            estoque.quantidade_item = nova_quantidade
+            estoque.save()
+
+        return JsonResponse({'message': 'Item removido do estoque'}, status=status.HTTP_200_OK)
