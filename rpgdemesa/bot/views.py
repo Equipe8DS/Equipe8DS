@@ -130,5 +130,5 @@ class EstoqueViewSet(viewsets.ModelViewSet):
     queryset = Estoque.objects.all()
     serializer_class = EstoqueSerializer
     permission_classes = [permissions.IsAuthenticated]
-
+    filterset_fields = ['loja_id']
     

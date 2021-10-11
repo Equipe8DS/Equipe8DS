@@ -1,4 +1,4 @@
-
+from botController import BotController
 class BotUtil:
     def gerar_lista_por_nomes(list):
         i = 1
@@ -10,6 +10,10 @@ class BotUtil:
 
     def gerar_dicionario_lista_por_nome(list):
         list_dict = {object['nome']: object for object in list}
+        return list_dict
+
+    def gerar_dicionario_lista_por_nome_itens_estoque(list):
+        list_dict = {object['item']['nome']: object for object in list}
         return list_dict
 
     def info_detalhada_personagem(personagem):
@@ -55,4 +59,25 @@ class BotUtil:
 
     def info_detalhada_jogador(jogador):
         info = 'Nome: ' + jogador['nome'] + '\n' + 'E-mail: ' + str(jogador['email']) + '\n'  + 'Username: ' + str(jogador['username']) + '\n'
+        return info
+
+    def info_detalhada_loja(loja):
+        info = 'Nome: ' + loja['nome'] + '\n' + 'Cidade: ' + str(loja['cidade']) + '\n'  + 'Responsável: ' + str(loja['responsavel']) + '\n' + 'Ativo: ' + str(loja['ativo']) + '\n'
+        return info
+
+    def info_detalhada_estoque(loja):
+        id = loja['pk']
+
+        results = BotController.buscar_estoque(id)
+        response_dict = BotUtil.gerar_dicionario_lista_por_nome_itens_estoque(results)
+
+        info = ""
+
+        for key in response_dict:
+            elem = response_dict[key]
+            item = elem['item']
+            info = info + 'Nome: ' + item['nome'] + '\n' + 'Qualidade: ' + BotUtil.imprime_qualidade(item['qualidade']) + '\n' + 'Categoria: ' + BotUtil.imprime_categoria(item['categoria']) + '\n' + 'Descrição: ' + item['descricao'] + '\n'
+            info = info + 'Preço:' + str(elem['preco_item']) + ' peças de ouro ' + '\n'  + 'Quantidade: ' + str(elem['quantidade_item']) + '\n'
+            info = info + '\n' + '\n'
+
         return info
