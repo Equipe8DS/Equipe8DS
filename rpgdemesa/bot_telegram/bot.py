@@ -113,7 +113,7 @@ def send_jogadores_lista(message):
     bot.reply_to(message, "Jogadores registrados: \n" + response, parse_mode="Markdown")
 
 @bot.message_handler(commands=['jogador'])
-def send_info_jogdaor(message):
+def send_info_jogador(message):
     cid = message.chat.id
     results = BotController.buscar_jogador()
     response_dict = BotUtil.gerar_dicionario_lista_por_nome(results)
@@ -131,7 +131,59 @@ def send_info_jogdaor(message):
         except Exception as e:
             print(e)
             bot.send_chat_action(cid, 'typing')
-            bot.send_message(cid, "Houve um erro ao consultar a cidade.", parse_mode="Markdown")
+            bot.send_message(cid, "Houve um erro ao consultar o jogador.", parse_mode="Markdown")
+
+@bot.message_handler(commands=['lojas'])
+def send_lojas_lista(message):
+    cid = message.chat.id
+    results = BotController.buscar_loja()
+    response = BotUtil.gerar_lista_por_nomes(results)
+    bot.send_chat_action(cid, 'typing')
+    bot.reply_to(message, "Lojas registradas: \n" + response, parse_mode="Markdown")
+
+@bot.message_handler(commands=['loja'])
+def send_info_loja(message):
+    cid = message.chat.id
+    results = BotController.buscar_loja()
+    response_dict = BotUtil.gerar_dicionario_lista_por_nome(results)
+
+    loja_name = ' '.join(message.text.split(' ')[1:])
+    
+    if not loja_name:
+        bot.send_chat_action(cid, 'typing')
+        bot.send_message(cid, "Insira o nome da loja que deseja visualizar.")
+    else:
+        try:
+            info = BotUtil.info_detalhada_loja(response_dict[loja_name])
+            bot.send_chat_action(cid, 'typing')
+            bot.send_message(cid, info, parse_mode="Markdown")
+        except Exception as e:
+            print(e)
+            bot.send_chat_action(cid, 'typing')
+            bot.send_message(cid, "Houve um erro ao consultar a loja.", parse_mode="Markdown")
+
+
+@bot.message_handler(commands=['estoque'])
+def send_info_estoque(message):
+    cid = message.chat.id
+    results = BotController.buscar_loja()
+    response_dict = BotUtil.gerar_dicionario_lista_por_nome(results)
+
+    loja_name = ' '.join(message.text.split(' ')[1:])
+    
+    if not loja_name:
+        bot.send_chat_action(cid, 'typing')
+        bot.send_message(cid, "Insira o nome da loja que deseja visualizar o estoque.")
+    else:
+        try:
+            info = BotUtil.info_detalhada_estoque(response_dict[loja_name])
+            bot.send_chat_action(cid, 'typing')
+            bot.send_message(cid, 'Estoque da loja ' + loja_name + ': \n\n' + info, parse_mode="Markdown")
+        except Exception as e:
+            print(e)
+            bot.send_chat_action(cid, 'typing')
+            bot.send_message(cid, "Houve um erro ao consultar a loja.", parse_mode="Markdown")
+
 
 bot.polling()
 
