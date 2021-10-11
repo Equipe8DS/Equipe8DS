@@ -104,6 +104,35 @@ def send_info_item(message):
             bot.send_chat_action(cid, 'typing')
             bot.send_message(cid, "Houve um erro ao consultar a cidade.", parse_mode="Markdown")
 
+@bot.message_handler(commands=['jogadores'])
+def send_jogadores_lista(message):
+    cid = message.chat.id
+    results = BotController.buscar_jogador()
+    response = BotUtil.gerar_lista_por_nomes(results)
+    bot.send_chat_action(cid, 'typing')
+    bot.reply_to(message, "Jogadores registrados: \n" + response, parse_mode="Markdown")
+
+@bot.message_handler(commands=['jogador'])
+def send_info_jogdaor(message):
+    cid = message.chat.id
+    results = BotController.buscar_jogador()
+    response_dict = BotUtil.gerar_dicionario_lista_por_nome(results)
+
+    jogador_name = ' '.join(message.text.split(' ')[1:])
+    
+    if not jogador_name:
+        bot.send_chat_action(cid, 'typing')
+        bot.send_message(cid, "Insira o nome do jogador que deseja visualizar.")
+    else:
+        try:
+            info = BotUtil.info_detalhada_jogador(response_dict[jogador_name])
+            bot.send_chat_action(cid, 'typing')
+            bot.send_message(cid, info, parse_mode="Markdown")
+        except Exception as e:
+            print(e)
+            bot.send_chat_action(cid, 'typing')
+            bot.send_message(cid, "Houve um erro ao consultar a cidade.", parse_mode="Markdown")
+
 bot.polling()
 
 #while True:

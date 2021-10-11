@@ -52,3 +52,7 @@ class BotUtil:
             return 'Equipamento'
         elif(categoria == 'luxo'):
             return 'Luxo'
+
+    def info_detalhada_jogador(jogador):
+        info = 'Nome: ' + jogador['nome'] + '\n' + 'E-mail: ' + str(jogador['email']) + '\n'  + 'Username: ' + str(jogador['username']) + '\n'
+        return info
