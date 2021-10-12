@@ -1,24 +1,25 @@
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework import viewsets, status, permissions
-from rest_framework.response import Response
+from django.http import HttpRequest
 from django.http.response import JsonResponse
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, status, permissions
+from rest_framework.decorators import action
+from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
+from rest_framework.response import Response
 
 from bot.models import Cidade, Jogador
-from bot.models import Item
-from bot.models import Personagem
-from bot.models import Loja
-from bot.models import ItemPersonagem
 from bot.models import Estoque
+from bot.models import Item
+from bot.models import ItemPersonagem
+from bot.models import Loja
+from bot.models import Personagem
 from bot.serializers import CidadeSerializer, JogadorSerializer
-from bot.serializers import ItemSerializer
-from bot.serializers import PersonagemSerializer
-from bot.serializers import ItemPersonagemSerializer
-from bot.serializers import LojaSerializer
 from bot.serializers import EstoqueSerializer
-from rest_framework.decorators import api_view
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.decorators import action
+from bot.serializers import ItemPersonagemSerializer
+from bot.serializers import ItemSerializer
+from bot.serializers import LojaSerializer
+from bot.serializers import PersonagemSerializer
 
 
 @api_view(['PUT'])
@@ -33,7 +34,7 @@ def remover_item_inventario(request, pk):
         item_personagem, data=item_personagem_data)
 
     if item_personagem_serializer.is_valid():
-        if item_personagem_serializer.data['quantidade'] == 0:
+        if item_personagem_serializer.data['quantidade'] <= 0:
             item_personagem.delete()
         else:
             item_personagem_serializer.save()
@@ -132,6 +133,36 @@ class LojaViewSet(viewsets.ModelViewSet):
         loja.save()
         return Response({'status': status.HTTP_200_OK})
 
+    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='comprar-item',
+            url_name='comprar_item', detail=False)
+    def comprar_item(self, request):
+        id_loja = request.data['idLoja']
+        id_item = request.data['idItem']
+        estoque = Estoque.objects.get(loja=id_loja, item=id_item)
+
+        quantidade = int(request.data['quantidade'])
+        personagem = Personagem.objects.get(id=request.data['idPersonagem'])
+
+        gold_personagem = personagem.itempersonagem_set.get(item=Item.objects.get(nome='Gold'))
+        personagem_has_gold = gold_personagem.personagem >= estoque.preco_item * quantidade
+
+        request_remove_estoque = HttpRequest()
+        request_remove_estoque.data = {'idLoja': id_loja, 'idItem': id_item, 'quantidade': quantidade}
+        resultado = EstoqueViewSet.remove_item_loja(self, request=request_remove_estoque)
+
+        if resultado.status_code == status.HTTP_200_OK:
+            try:
+                inventario_item = personagem.itempersonagem_set.get(item=id_item)
+                inventario_item.quantidade += quantidade
+                inventario_item.save()
+            except ObjectDoesNotExist:
+                personagem.itempersonagem_set.create(item_id=id_item, quantidade=quantidade)
+                personagem.save()
+
+            return JsonResponse({}, status=status.HTTP_200_OK)
+        else:
+            return resultado
+
 
 class EstoqueViewSet(viewsets.ModelViewSet):
     queryset = Estoque.objects.all()
@@ -155,7 +186,7 @@ class EstoqueViewSet(viewsets.ModelViewSet):
             loja = Loja.objects.get(pk=id_loja)
             item = Item.objects.get(pk=id_item)
             preco = float(request.data['preco']) if (
-                'preco' in request.data) else item.preco_sugerido
+                    'preco' in request.data) else item.preco_sugerido
 
             estoque = Estoque(loja=loja, item=item,
                               quantidade_item=quantidade, preco_item=preco)
@@ -171,11 +202,15 @@ class EstoqueViewSet(viewsets.ModelViewSet):
         estoque = Estoque.objects.get(loja=id_loja, item=id_item)
         nova_quantidade = estoque.quantidade_item - quantidade
 
-        if nova_quantidade <= 0:
+        if nova_quantidade > 0:
+            estoque.quantidade_item = nova_quantidade
+            estoque.save()
+        elif nova_quantidade == 0:
             estoque.delete()
 
         else:
-            estoque.quantidade_item = nova_quantidade
-            estoque.save()
+            return JsonResponse({'message': f'Não é possível remover {quantidade} itens, '
+                                            f'essa loja possui apenas {estoque.quantidade_item}.'},
+                                status=status.HTTP_401_UNAUTHORIZED)
 
         return JsonResponse({'message': 'Item removido do estoque'}, status=status.HTTP_200_OK)
