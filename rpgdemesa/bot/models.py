@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models import constraints
 from django.utils.translation import gettext as _
 from rest_framework.reverse import reverse
 
@@ -134,6 +133,7 @@ class Jogador(AbstractUser):
     is_active = models.BooleanField(editable=False, default=True)
     email = models.CharField(unique=True, max_length=100)
     username = models.CharField(unique=True, max_length=15)
+
     # perfil = models.CharField (editable = False, default = 'jogador')
 
     class Meta:
@@ -155,6 +155,7 @@ class ItemPersonagem(models.Model):
     class Meta:
         verbose_name = _("inventario")
         verbose_name_plural = _("inventarios")
+        constraints = [models.UniqueConstraint(fields=['personagem', 'item'], name='itempersonagem_constraint')]
 
 
 class Loja(models.Model):
@@ -163,7 +164,7 @@ class Loja(models.Model):
     cidade = models.ForeignKey(Cidade, on_delete=models.CASCADE)
     caixa = models.FloatField(max_length=100, null=False, verbose_name='Caixa')
     responsavel = models.ForeignKey(Personagem, on_delete=models.CASCADE,
-                                    verbose_name='Responsável', limit_choices_to={'ativo': True},)
+                                    verbose_name='Responsável', limit_choices_to={'ativo': True}, )
     estok = models.ManyToManyField(Item, through='Estoque')
     ativo = models.BooleanField(editable=False, default=True)
 
@@ -183,9 +184,9 @@ class Estoque(models.Model):
         null=False, verbose_name='Quantidade de Itens')
     preco_item = models.FloatField(null=False, verbose_name='Preço do Item')
     loja = models.ForeignKey(
-        Loja, on_delete=models.CASCADE, limit_choices_to={'ativo': True},)
+        Loja, on_delete=models.CASCADE, limit_choices_to={'ativo': True}, )
     item = models.ForeignKey(
-        Item, on_delete=models.DO_NOTHING, limit_choices_to={'ativo': True},)
+        Item, on_delete=models.DO_NOTHING, limit_choices_to={'ativo': True}, )
 
     class Meta:
         verbose_name = _("estoque")
