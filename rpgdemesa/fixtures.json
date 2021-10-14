@@ -1,0 +1,152 @@
+[
+    {
+        "model": "bot.item",
+        "pk": 1,
+        "fields": {
+            "nome": "Espada",
+            "preco_sugerido": 500.0,
+            "qualidade": "excelente",
+            "categoria": "equipamento",
+            "descricao": "Usada para matar!!!!!!!!!!!!!!!!!",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 2,
+        "fields": {
+            "nome": "Gold",
+            "preco_sugerido": 0.0,
+            "qualidade": "excelente",   
+            "categoria": "luxo",
+            "descricao": "peças de ouro",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 3,
+        "fields": {
+            "nome": "Cerveja",
+            "preco_sugerido": 1,
+            "qualidade": "pobre",   
+            "categoria": "alimentos",
+            "descricao": "O gosto não sai da sua boca até realizar um descanso curto.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 4,
+        "fields": {
+            "nome": "Suco de frutas",
+            "preco_sugerido": 3,
+            "qualidade": "medio",   
+            "categoria": "alimentos",
+            "descricao": "Rede 1d4x25 copos.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.personagem",
+        "pk": 1,
+        "fields": {
+            "nome": "Lucas",
+            "raca": "qareen",
+            "classe": "inventor",
+            "tipo": "npc",
+            "ativo": true,
+            "dono": 1
+        }
+    },
+    {
+        "model": "bot.personagem",
+        "pk": 2,
+        "fields": {
+            "nome": "Dursin",
+            "raca": "osteon",
+            "classe": "inventor",
+            "tipo": "npc",
+            "ativo": true,
+            "dono": 1
+        }
+    },
+    {
+        "model": "bot.cidade",
+        "pk": 1,
+        "fields": {
+            "nome": "Ervora",
+            "tesouro": 10000.0,
+            "governante": 2,
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.cidade",
+        "pk": 2,
+        "fields": {
+            "nome": "Lardhome",
+            "tesouro": 12000.0,
+            "governante": 1,
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.jogador",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$260000$8FMUDl4qWjZOm9VFP23n4a$uVBvzEvD75thH5fZ264GwAsgohzufW+fKUHM1ubApBU=",
+            "last_login": "2021-10-14T14:07:58.072Z",
+            "is_superuser": true,
+            "first_name": "",
+            "last_name": "",
+            "is_staff": true,
+            "date_joined": "2021-10-14T14:07:35.282Z",
+            "nome": "",
+            "is_active": true,
+            "email": "admin@admin.com",
+            "username": "admin",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "bot.itempersonagem",
+        "pk": 1,
+        "fields": {
+            "personagem": 1,
+            "item": 1,
+            "quantidade": 1
+        }
+    },
+    {
+        "model": "bot.itempersonagem",
+        "pk": 2,
+        "fields": {
+            "personagem": 2,
+            "item": 1,
+            "quantidade": 1
+        }
+    },
+    {
+        "model": "bot.loja",
+        "pk": 1,
+        "fields": {
+            "nome": "Lojinha",
+            "cidade": 1,
+            "caixa": 500.0,
+            "responsavel": 2,
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 1,
+        "fields": {
+            "quantidade_item": 5,
+            "preco_item": 100.0,
+            "loja": 1,
+            "item": 1
+        }
+    }
+]
