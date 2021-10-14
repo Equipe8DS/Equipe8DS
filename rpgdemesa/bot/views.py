@@ -14,12 +14,14 @@ from bot.models import Item
 from bot.models import ItemPersonagem
 from bot.models import Loja
 from bot.models import Personagem
+from bot.models import Historico
 from bot.serializers import CidadeSerializer, JogadorSerializer
 from bot.serializers import EstoqueSerializer
 from bot.serializers import ItemPersonagemSerializer
 from bot.serializers import ItemSerializer
 from bot.serializers import LojaSerializer
 from bot.serializers import PersonagemSerializer
+from bot.serializers import HistoricoSerializer
 
 
 @api_view(['PUT'])
@@ -56,9 +58,13 @@ class ItemPersonagemViewSet(viewsets.ModelViewSet):
         id_item = request.data['idItem']
         quantidade = int(request.data['quantidade'])
         try:
-            inventario = ItemPersonagem.objects.get(personagem=id_personagem, item=id_item)
+            inventario = ItemPersonagem.objects.get(
+                personagem=id_personagem, item=id_item)
             inventario.quantidade += quantidade
             inventario.save()
+            historico = Historico(
+                personagem_id=id_personagem, item_id=id_item, quantidade=quantidade, tipo='inclusao')
+            historico.save()
             return JsonResponse({'message': 'Item adicionado ao inventário', 'quantidade': inventario.quantidade},
                                 status=status.HTTP_200_OK)
 
@@ -68,6 +74,9 @@ class ItemPersonagemViewSet(viewsets.ModelViewSet):
             inventario = ItemPersonagem(personagem=personagem, item=item,
                                         quantidade=quantidade)
             inventario.save()
+            historico = Historico(
+                personagem_id=id_personagem, item_id=id_item, quantidade=quantidade, tipo='inclusao')
+            historico.save()
             return JsonResponse({'message': 'Item adicionado ao inventário'}, status=status.HTTP_201_CREATED)
 
     @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='remover-item-inventario',
@@ -77,7 +86,8 @@ class ItemPersonagemViewSet(viewsets.ModelViewSet):
         id_item = request.data['idItem']
         quantidade = int(request.data['quantidade'])
 
-        item_personagem = ItemPersonagem.objects.get(personagem=id_personagem, item=id_item)
+        item_personagem = ItemPersonagem.objects.get(
+            personagem=id_personagem, item=id_item)
         nova_quantidade = item_personagem.quantidade - quantidade
 
         if nova_quantidade > 0:
@@ -88,7 +98,9 @@ class ItemPersonagemViewSet(viewsets.ModelViewSet):
         else:
             return JsonResponse({'message': 'Não é possível remover essa quantidade de itens'},
                                 status=status.HTTP_403_FORBIDDEN)
-
+        historico = Historico(
+            personagem_id=id_personagem, item_id=id_item, quantidade=quantidade, tipo='remocao')
+        historico.save()
         return JsonResponse({'message': 'Item removido do inventário'}, status=status.HTTP_200_OK)
 
 
@@ -187,7 +199,8 @@ class LojaViewSet(viewsets.ModelViewSet):
         estoque = Estoque.objects.get(loja=id_loja, item=id_item)
         personagem = Personagem.objects.get(id=request.data['idPersonagem'])
 
-        gold_personagem = personagem.itempersonagem_set.get(item=Item.objects.get(nome='Gold'))
+        gold_personagem = personagem.itempersonagem_set.get(
+            item=Item.objects.get(nome='Gold'))
 
         valor_compra = estoque.preco_item * quantidade
         personagem_has_gold = gold_personagem.quantidade >= valor_compra
@@ -195,13 +208,16 @@ class LojaViewSet(viewsets.ModelViewSet):
 
         if personagem_has_gold and loja_has_estoque:
             request_remove_estoque = HttpRequest()
-            request_remove_estoque.data = {'idLoja': id_loja, 'idItem': id_item, 'quantidade': quantidade}
-            EstoqueViewSet.remove_item_loja(EstoqueViewSet(), request=request_remove_estoque)
+            request_remove_estoque.data = {
+                'idLoja': id_loja, 'idItem': id_item, 'quantidade': quantidade}
+            EstoqueViewSet.remove_item_loja(
+                EstoqueViewSet(), request=request_remove_estoque)
             try:
                 request_add_inventario = HttpRequest()
                 request_add_inventario.data = {'idPersonagem': personagem.id, 'idItem': id_item,
                                                'quantidade': quantidade}
-                ItemPersonagemViewSet.add_item_inventario(ItemPersonagemViewSet(), request=request_add_inventario)
+                ItemPersonagemViewSet.add_item_inventario(
+                    ItemPersonagemViewSet(), request=request_add_inventario)
 
                 request_remove_gold = HttpRequest()
                 request_remove_gold.data = {'idPersonagem': personagem.id, 'idItem': gold_personagem.item.id,
@@ -209,7 +225,8 @@ class LojaViewSet(viewsets.ModelViewSet):
                 ItemPersonagemViewSet.remover_item_inventario(ItemPersonagemViewSet(),
                                                               request=request_remove_gold)
             except ObjectDoesNotExist:
-                personagem.itempersonagem_set.create(item_id=id_item, quantidade=quantidade)
+                personagem.itempersonagem_set.create(
+                    item_id=id_item, quantidade=quantidade)
                 personagem.save()
 
             return JsonResponse({'message': 'Compra efetuada.'}, status=status.HTTP_200_OK)
@@ -223,7 +240,6 @@ class EstoqueViewSet(viewsets.ModelViewSet):
     serializer_class = EstoqueSerializer
     permission_classes = [permissions.IsAuthenticated]
     filterset_fields = ['loja_id']
-    
 
     @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='add-item-loja',
             url_name='add_item_loja', detail=False)
@@ -242,7 +258,7 @@ class EstoqueViewSet(viewsets.ModelViewSet):
             loja = Loja.objects.get(pk=id_loja)
             item = Item.objects.get(pk=id_item)
             preco = float(request.data['preco']) if (
-                    'preco' in request.data) else item.preco_sugerido
+                'preco' in request.data) else item.preco_sugerido
 
             estoque = Estoque(loja=loja, item=item,
                               quantidade_item=quantidade, preco_item=preco)
@@ -270,3 +286,9 @@ class EstoqueViewSet(viewsets.ModelViewSet):
                                 status=status.HTTP_401_UNAUTHORIZED)
 
         return JsonResponse({'message': 'Item removido do estoque'}, status=status.HTTP_200_OK)
+
+
+class HistoricoViewSet (viewsets.ModelViewSet):
+    queryset = Historico.objects.all()
+    serializer_class = HistoricoSerializer
+    permission_classes = [permissions.IsAuthenticated]

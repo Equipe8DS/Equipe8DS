@@ -7,6 +7,7 @@ from bot.models import Personagem
 from bot.models import Loja
 from bot.models import ItemPersonagem
 from bot.models import Estoque
+from bot.models import Historico
 
 class PersonagemSerializer(serializers.HyperlinkedModelSerializer):
     dono = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -74,4 +75,11 @@ class EstoqueSerializer(serializers.HyperlinkedModelSerializer) :
     class Meta :
         model = Estoque
         fields = ['item', 'item_id', 'quantidade_item', 'preco_item', 'loja_id',]
+        depth = 1
+
+class HistoricoSerializer(serializers.HyperlinkedModelSerializer) :
+    
+    class Meta :
+        model = Historico
+        fields = ['loja', 'item', 'personagem', 'quantidade', 'tipo','preco', 'data', 'descricao']
         depth = 1
