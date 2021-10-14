@@ -184,6 +184,30 @@ def send_info_estoque(message):
             bot.send_chat_action(cid, 'typing')
             bot.send_message(cid, "Houve um erro ao consultar a loja.", parse_mode="Markdown")
 
+@bot.message_handler(commands=['comprar'])
+def comprar_item(message):
+    cid = message.chat.id
+
+    nomePersonagem, nomeLoja, nomeItem, quantidade  = message.text.split(' ')[1:]
+
+    print("Nome: " + nomePersonagem)
+    print("Loja: " + nomeLoja)
+    print("Item:" + nomeItem)
+    print("Quantidade:" + quantidade)
+    
+    if not nomeLoja or not nomePersonagem or not nomeItem or not quantidade:
+        bot.send_chat_action(cid, 'typing')
+        bot.send_message(cid, "Campos faltantes.")
+    else:
+        try:
+            bot.send_message(cid, 'Processando a compra, por favor aguarde...', parse_mode="Markdown")
+            info = BotController.comprar_item(nomeLoja, nomePersonagem, nomeItem, quantidade)
+            bot.send_chat_action(cid, 'typing')
+            bot.send_message(cid, info, parse_mode="Markdown")
+        except Exception as e:
+            print(e)
+            bot.send_chat_action(cid, 'typing')
+            bot.send_message(cid, "Houve um erro ao comprar o item.", parse_mode="Markdown")
 
 bot.polling()
 

@@ -45,7 +45,7 @@ def remover_item_inventario(request, pk):
 class ItemPersonagemViewSet(viewsets.ModelViewSet):
     queryset = ItemPersonagem.objects.all()
     serializer_class = ItemPersonagemSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['personagem_id']
 
@@ -96,6 +96,7 @@ class PersonagemViewSet(viewsets.ModelViewSet):
     queryset = Personagem.objects.all()
     serializer_class = PersonagemSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filterset_fields = ['nome']
 
     def destroy(self, request, *args, **kwargs):
         personagem = self.get_object()
@@ -108,6 +109,7 @@ class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filterset_fields = ['nome']
 
     def destroy(self, request, *args, **kwargs):
         item = self.get_object()
@@ -160,6 +162,7 @@ class JogadorViewSet(viewsets.ModelViewSet):
 class LojaViewSet(viewsets.ModelViewSet):
     queryset = Loja.objects.all()
     serializer_class = LojaSerializer
+    filterset_fields = ['nome']
 
     def get_permissions(self):
 

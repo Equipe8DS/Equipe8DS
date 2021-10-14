@@ -28,7 +28,7 @@ class ItemPersonagemSerializer(serializers.ModelSerializer):
     personagem_id = serializers.PrimaryKeyRelatedField(queryset=Personagem.objects.all(), source='personagem')
     
     class Meta:
-        model = ItemPersonagem
+        model = ItemPersonagem      
         fields = ['pk', 'item_id', 'item', 'personagem_id', 'quantidade']
         depth = 1
 
