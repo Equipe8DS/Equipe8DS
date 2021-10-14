@@ -1,8 +1,10 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.fields import CharField
 from django.utils.translation import gettext as _
 from rest_framework.reverse import reverse
+from datetime import datetime
 
 
 class Item(models.Model):
@@ -155,7 +157,8 @@ class ItemPersonagem(models.Model):
     class Meta:
         verbose_name = _("inventario")
         verbose_name_plural = _("inventarios")
-        constraints = [models.UniqueConstraint(fields=['personagem', 'item'], name='itempersonagem_constraint')]
+        constraints = [models.UniqueConstraint(
+            fields=['personagem', 'item'], name='itempersonagem_constraint')]
 
 
 class Loja(models.Model):
@@ -176,7 +179,7 @@ class Loja(models.Model):
         return self.nome
 
     def get_absolute_url(self):
-        return reverse("personagem_detail", kwargs={"pk": self.pk})
+        return reverse("loja", kwargs={"pk": self.pk})
 
 
 class Estoque(models.Model):
@@ -193,3 +196,41 @@ class Estoque(models.Model):
         verbose_name_plural = _("estoques")
         constraints = [models.UniqueConstraint(
             fields=['loja', 'item'], name='unique constraints')]
+
+
+class Historico(models.Model):
+    TIPO = [
+        (None, '<selecione>'),
+        ('retirada', 'Retirada'),
+        ('inclusao', 'Inclusão'),
+        ('compra', 'Compra'),
+    ]
+
+    loja = models.ForeignKey(Loja, on_delete=models.DO_NOTHING, null=True)
+    item = models.ForeignKey(Item, on_delete=models.DO_NOTHING, null=False)
+    personagem = models.ForeignKey(
+        Personagem, on_delete=models.DO_NOTHING, null=False)
+    quantidade = models.IntegerField(null=False)
+    tipo = models.CharField(max_length=10, null=False, choices=TIPO)
+    preco = models.FloatField(null=True)
+    data = models.DateTimeField(default=datetime.now(), null=False)
+    descricao = models.CharField(max_length=500)
+
+    class Meta:
+        verbose_name = _("historico")
+        verbose_name_plural = _("historicos")
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if hasattr(self, 'loja') and self.loja is not None:
+            self.descricao = f'{self.personagem} fez {self.tipo} de {self.quantidade} {self.item} em {self.data}' \
+                             f' na {self.loja} por {self.preco}.'
+        else:
+            self.descricao = f'{self.personagem} fez {self.tipo} de {self.quantidade} {self.item} em {self.data}.'
+
+        super(Historico, self).save()
+
+    def __str__(self):
+        return self.descricao
+
+    def get_absolute_url(self):
+        return reverse("historico", kwargs={"pk": self.pk})
