@@ -221,11 +221,13 @@ class Historico(models.Model):
         verbose_name_plural = _("historicos")
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        data = datetime.now()
+        data = data.strftime("%d/%m/%y às %H:%M:%S")
         if hasattr(self, 'loja') and self.loja is not None:
-            self.descricao = f'{self.personagem} fez {self.tipo} de {self.quantidade} {self.item} em {self.data}' \
+            self.descricao = f'{self.personagem} fez {self.tipo} de {self.quantidade} {self.item} em {data}' \
                              f' na {self.loja} por {self.preco}.'
         else:
-            self.descricao = f'{self.personagem} fez {self.tipo} de {self.quantidade} {self.item} em {self.data}.'
+            self.descricao = f'{self.personagem} fez {self.tipo} de {self.quantidade} {self.item} em {data}.'
 
         super(Historico, self).save()
 
