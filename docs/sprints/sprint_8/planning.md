@@ -8,11 +8,11 @@
 
 **Duração:** Quatro dias
 
-**Pontos Planejados**: 15
+**Pontos Planejados**: 20
 
 **Pontos Adicionados**: 0
 
-**Pontos Totais**: 15
+**Pontos Totais**: 20
 
 -------
 
@@ -70,6 +70,7 @@ Abaixo é mostrado o _Burndown_ de riscos das _Sprints_ em que foi em que ele fo
 * <a href="https://github.com/lucaaas/Equipe8DS/issues/54"> [#54]Eu, como desenvolvedor, gostaria de fazer deploy do bot do telegram para poder usá-lo de qualquer aparelho. </a>
 * <a href="https://github.com/lucaaas/Equipe8DS/issues/66"> [#66]Eu, como desenvolvedor, gostaria de fazer deploy do bot do telegram para poder usá-lo de qualquer aparelho. </a>
 * <a href="https://github.com/lucaaas/Equipe8DS/issues/75"> [#75]BugFix - Corrigir transferência de dinheiro pra loja </a>
+* <a href="https://github.com/lucaaas/Equipe8DS/issues/77"> [#77]Eu, como usuário, gostaria de realizar login pelo bot </a>
 
 
 
