@@ -15,6 +15,8 @@ from bot.models import ItemPersonagem
 from bot.models import Loja
 from bot.models import Personagem
 from bot.models import Historico
+from bot.models import EstiloVida
+from bot.models import GastosSemanais
 from bot.serializers import CidadeSerializer, JogadorSerializer
 from bot.serializers import EstoqueSerializer
 from bot.serializers import ItemPersonagemSerializer
@@ -22,7 +24,8 @@ from bot.serializers import ItemSerializer
 from bot.serializers import LojaSerializer
 from bot.serializers import PersonagemSerializer
 from bot.serializers import HistoricoSerializer
-
+from bot.serializers import EstiloVidaSerializer
+from bot.serializers import GastosSemanaisSerializer
 
 @api_view(['PUT'])
 def remover_item_inventario(request, pk):
@@ -234,6 +237,59 @@ class LojaViewSet(viewsets.ModelViewSet):
             return JsonResponse({'message': 'Compra não autorizada.', 'lojaHasEstoque': loja_has_estoque,
                                  'personagemHasGold': personagem_has_gold}, status=status.HTTP_200_OK)
 
+    def comprar_por_tipo(self, gastoSemanal, dinheiro_total, idPersonagem):
+        estoques = Estoque.objects.all()
+        carrinho_compras = []
+        dinheiro_atual = dinheiro_total
+        consegue_comprar = True
+
+        while(consegue_comprar):
+            comprou_algo = False
+            for estoque in estoques:
+                if estoque.item.categoria == gastoSemanal.tipo:
+                    if(dinheiro_atual >= estoque.preco_item):
+                        carrinho_compras.append({'lojaId': estoque.loja.id, 'itemId': estoque.item.id}) 
+                        dinheiro_atual = dinheiro_atual - estoque.preco_item
+                        comprou_algo = True
+
+            #comprar
+            for compra in carrinho_compras:
+                request_comprar = HttpRequest()
+                request_comprar.data = {'idLoja': compra['lojaId'], 'idItem': compra['itemId'], 'quantidade': 1, 'idPersonagem': idPersonagem}
+                self.comprar_item(request=request_comprar)
+
+            if(dinheiro_atual == 0 or comprou_algo == False):
+                consegue_comprar = False
+
+        return carrinho_compras
+
+    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='realizar_compras_semanais',
+            url_name='realizar_compras_semanais', detail=False)
+    def realizar_compras_semanais(self, request):
+        
+        try:
+            personagens = Personagem.objects.filter(tipo='npc')
+            carrinho_compras = []
+
+            for personagem in personagens:
+                renda = personagem.getOuro()
+                gastosSemanais = GastosSemanais.objects.filter(estiloVida = personagem.estiloVida)
+
+                gastos_por_tipo = {}
+
+                for gastoSemanal in gastosSemanais:
+                    gastos_por_tipo[gastoSemanal.tipo] = renda * (gastoSemanal.gastoPercentual / 100)
+
+                for gastoSemanal in gastosSemanais:
+                    carrinho_compras = carrinho_compras + self.comprar_por_tipo(gastoSemanal, gastos_por_tipo[gastoSemanal.tipo], personagem.id)
+
+            return JsonResponse({'message': 'Compras efetuadas'},
+                                status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            pass
+
+        return JsonResponse({'message': 'Compras efetuadas'},
+                                status=status.HTTP_200_OK)   
 
 class EstoqueViewSet(viewsets.ModelViewSet):
     queryset = Estoque.objects.all()
@@ -291,4 +347,14 @@ class EstoqueViewSet(viewsets.ModelViewSet):
 class HistoricoViewSet (viewsets.ModelViewSet):
     queryset = Historico.objects.all()
     serializer_class = HistoricoSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class EstiloVidaViewSet (viewsets.ModelViewSet):
+    queryset = EstiloVida.objects.all()
+    serializer_class = EstiloVidaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+class GastosSemanaisViewSet (viewsets.ModelViewSet):
+    queryset = GastosSemanais.objects.all()
+    serializer_class = GastosSemanaisSerializer
     permission_classes = [permissions.IsAuthenticated]

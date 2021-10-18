@@ -1,4 +1,82 @@
 [
+    
+    {
+        "model": "bot.estilovida",
+        "pk": 1,
+        "fields": {
+            "nome": "Pobre"
+        }
+    },
+    {
+        "model": "bot.estilovida",
+        "pk": 2,
+        "fields": {
+            "nome": "Moderado"
+        }
+    },
+    {
+        "model": "bot.estilovida",
+        "pk": 3,
+        "fields": {
+            "nome": "Luxo"
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "fields": {
+            "estiloVida": 1,
+            "tipo": "alimentos",
+            "gastoPercentual": 60
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "fields": {
+            "estiloVida": 1,
+            "tipo": "transporte",
+            "gastoPercentual": 10
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "fields": {
+            "estiloVida": 1,
+            "tipo": "academico",
+            "gastoPercentual": 0
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "fields": {
+            "estiloVida": 1,
+            "tipo": "agricultura",
+            "gastoPercentual": 20
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "fields": {
+            "estiloVida": 1,
+            "tipo": "casa",
+            "gastoPercentual": 5
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "fields": {
+            "estiloVida": 1,
+            "tipo": "equipamento",
+            "gastoPercentual": 5
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "fields": {
+            "estiloVida": 1,
+            "tipo": "luxo",
+            "gastoPercentual": 0
+        }
+    },
     {
         "model": "bot.item",
         "pk": 1,
@@ -56,7 +134,8 @@
             "classe": "inventor",
             "tipo": "npc",
             "ativo": true,
-            "dono": 1
+            "dono": 1,
+            "estiloVida": 1
         }
     },
     {
@@ -68,7 +147,8 @@
             "classe": "inventor",
             "tipo": "npc",
             "ativo": true,
-            "dono": 1
+            "dono": 1,
+            "estiloVida": 2
         }
     },
     {
