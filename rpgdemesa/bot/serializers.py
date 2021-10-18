@@ -83,7 +83,7 @@ class LojaSerializer(serializers.ModelSerializer) :
 class EstoqueSerializer(serializers.HyperlinkedModelSerializer) :
     
     loja_id = serializers.PrimaryKeyRelatedField(queryset=Loja.objects.all(), source='loja')
-    item_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Item.objects.all(), source='item')
+    item_id = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all(), source='item')
 
     class Meta :
         model = Estoque

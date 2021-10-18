@@ -242,7 +242,7 @@ class LojaViewSet(viewsets.ModelViewSet):
                 personagem_id=personagem.id, item_id=id_item, quantidade=quantidade, tipo='compra', preco=valor_compra, loja_id=id_loja)
             historico.save()
 
-            return JsonResponse({'message': 'Compra efetuada.'}, status=status.HTTP_200_OK)
+            return JsonResponse({'message': f'Compra efetuada. {quantidade} unidade(s) do item {estoque.item.nome} foram compradas pelo valor de {valor_compra} peças de ouro.'}, status=status.HTTP_200_OK)
         else:
             return JsonResponse({'message': 'Compra não autorizada.', 'lojaHasEstoque': loja_has_estoque,
                                  'personagemHasGold': personagem_has_gold}, status=status.HTTP_200_OK)
