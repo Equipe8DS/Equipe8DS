@@ -227,10 +227,15 @@ class LojaViewSet(viewsets.ModelViewSet):
                                             'quantidade': valor_compra}
                 ItemPersonagemViewSet.remover_item_inventario(ItemPersonagemViewSet(),
                                                               request=request_remove_gold)
+
             except ObjectDoesNotExist:
                 personagem.itempersonagem_set.create(
                     item_id=id_item, quantidade=quantidade)
                 personagem.save()
+
+            historico = Historico(
+                personagem_id=personagem.id, item_id=id_item, quantidade=quantidade, tipo='compra', preco=valor_compra, loja_id=id_loja)
+            historico.save()
 
             return JsonResponse({'message': 'Compra efetuada.'}, status=status.HTTP_200_OK)
         else:
