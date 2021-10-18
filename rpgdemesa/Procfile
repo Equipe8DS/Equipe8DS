@@ -1,2 +1,2 @@
-release: python manage.py makemigrations bot --noinput && python manage.py migrate --noinput
+release: python manage.py makemigrations bot --noinput && python manage.py migrate --noinput && python manage.py loaddata fixtures.json
 web: gunicorn rpgdemesa.wsgi --log-file -
