@@ -1,9 +1,9 @@
-# Resultados da Sprint 6
+# Resultados da Sprint 7
 ------
 
 [1. Indicadores de Qualidade do Processo](#1-indicadores-de-qualidade-do-processo)
 
-- [# Resultados da Sprint 6](#-resultados-da-sprint-6)
+- [# Resultados da Sprint 6](#-resultados-da-sprint-7)
 - [1. Indicadores de Qualidade do Processo](#1-indicadores-de-qualidade-do-processo)
     - [1.1 Fechamento da _Sprint_](#11-fechamento-da-sprint)
     - [1.2 _Burndown_](#12-burndown)
@@ -42,7 +42,7 @@ Dos 24 pontos planejados, 8 foram entregues.
 
 ![](images/velocity_sprint6.png)
 
-O _velocity_ representa a média de pontos entregues por _Sprint_. Essa __sprint__ o __velocity__ diminuiu de 14,5 para 14,6.
+O _velocity_ representa a média de pontos entregues por _Sprint_. Essa __sprint__ o __velocity__ diminuiu de 14,5 para 8,6.
 
 ### 1.4 Quadro de Conhecimento
 ![](images/knowledge_framework_sprint6.png)
