@@ -23,10 +23,11 @@ class GastosSemanaisSerializer(serializers.HyperlinkedModelSerializer):
 
 class PersonagemSerializer(serializers.HyperlinkedModelSerializer):
     dono = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    estiloVida_id = serializers.PrimaryKeyRelatedField(queryset=EstiloVida.objects.all(), source='estiloVida')
 
     class Meta:
         model = Personagem
-        fields = ['pk', 'nome', 'raca', 'classe', 'tipo', 'ativo', 'dono', 'estiloVida']
+        fields = ['pk', 'nome', 'raca', 'classe', 'tipo', 'ativo', 'dono', 'estiloVida_id']
         depth = 1
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):

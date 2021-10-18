@@ -5,7 +5,7 @@ from django.db.models.fields import CharField
 from django.utils.translation import gettext as _
 from rest_framework.reverse import reverse
 from datetime import datetime
-
+from django.core.exceptions import ObjectDoesNotExist
 
 class CategoriaItens:
     CATEGORIA = [
@@ -87,7 +87,7 @@ class Personagem(models.Model):
         ('kliren', 'Kliren'),
         ('medusa', 'Medusa'),
         ('osteon', 'Osteon'),
-        ('sereia/tritão', 'Sereia/Tritão'),
+        ('sereia/tritao', 'Sereia/Tritão'),
         ('silfide', 'Silfide'),
         ('aggelos', 'Aggelos'),
         ('sufulre', 'Sufulre'),
@@ -98,12 +98,12 @@ class Personagem(models.Model):
         ('mago', 'Mago'),
         ('bruxo', 'Bruxo'),
         ('feiticeiro', 'Feiticeiro'),
-        ('bárbaro', 'Bárbaro'),
+        ('barbaro', 'Bárbaro'),
         ('bardo', 'Bardo'),
-        ('caçador', 'Caçador'),
+        ('cacador', 'Caçador'),
         ('cavaleiro', 'Cavaleiro'),
-        ('clérigo', 'Clérigo'),
-        ('druída', 'Druída'),
+        ('clerigo', 'Clérigo'),
+        ('druida', 'Druída'),
         ('guerreiro', 'Guerreiro'),
         ('inventor', 'Inventor'),
         ('ladino', 'Ladino'),
@@ -139,8 +139,13 @@ class Personagem(models.Model):
         super(Personagem, self).save()
     
     def getOuro(self):
-        item = self.inventario.get(nome='Gold')
-        return ItemPersonagem.objects.get(item=item, personagem=self).quantidade
+        try:
+            item = self.inventario.get(nome='Ouro')
+            return ItemPersonagem.objects.get(item=item, personagem=self).quantidade
+        except ObjectDoesNotExist as e:
+            print(self.nome)
+            print(e)
+            return 0
 
 
 class Cidade(models.Model):

@@ -1,5 +1,184 @@
 [
-    
+    {
+        "model": "bot.item",
+        "pk": 1,
+        "fields": {
+            "nome": "Espada",
+            "preco_sugerido": 500.0,
+            "qualidade": "excelente",
+            "categoria": "equipamento",
+            "descricao": "Usada para matar!!!!!!!!!!!!!!!!!",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 2,
+        "fields": {
+            "nome": "Ouro",
+            "preco_sugerido": 0.0,
+            "qualidade": "excelente",
+            "categoria": "luxo",
+            "descricao": "peças de ouro",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 3,
+        "fields": {
+            "nome": "Cerveja",
+            "preco_sugerido": 1.0,
+            "qualidade": "pobre",
+            "categoria": "alimentos",
+            "descricao": "O gosto não sai da sua boca até realizar um descanso curto.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 4,
+        "fields": {
+            "nome": "Suco de frutas",
+            "preco_sugerido": 3.0,
+            "qualidade": "medio",
+            "categoria": "alimentos",
+            "descricao": "Rede 1d4x25 copos.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 5,
+        "fields": {
+            "nome": "Escudo de Madeira",
+            "preco_sugerido": 4.0,
+            "qualidade": "medio",
+            "categoria": "equipamento",
+            "descricao": "Escudo de madeira velho.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 6,
+        "fields": {
+            "nome": "Cavalo",
+            "preco_sugerido": 100.0,
+            "qualidade": "bom",
+            "categoria": "transporte",
+            "descricao": "Cavalo bem rápido.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 7,
+        "fields": {
+            "nome": "Carroça",
+            "preco_sugerido": 30.0,
+            "qualidade": "medio",
+            "categoria": "transporte",
+            "descricao": "Carroça de madeira. Necessita de ao menos dois cavalos puxando.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 8,
+        "fields": {
+            "nome": "Caderno de Couro",
+            "preco_sugerido": 3.0,
+            "qualidade": "excelente",
+            "categoria": "academico",
+            "descricao": "Um caderno bastante útil.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 9,
+        "fields": {
+            "nome": "Necronomicon",
+            "preco_sugerido": 500.0,
+            "qualidade": "excelente",
+            "categoria": "academico",
+            "descricao": "Livro amaldiçoado.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 10,
+        "fields": {
+            "nome": "Sementes de papoula",
+            "preco_sugerido": 1.0,
+            "qualidade": "medio",
+            "categoria": "agricultura",
+            "descricao": "Quem sabe se vai nascer alguma coisa.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 11,
+        "fields": {
+            "nome": "Ab�bora",
+            "preco_sugerido": 3.0,
+            "qualidade": "excelente",
+            "categoria": "agricultura",
+            "descricao": "Excelente para o halloween.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 12,
+        "fields": {
+            "nome": "Sofá",
+            "preco_sugerido": 3.0,
+            "qualidade": "ruim",
+            "categoria": "casa",
+            "descricao": "O pior assento possível.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 13,
+        "fields": {
+            "nome": "Mesa de jantar",
+            "preco_sugerido": 3.0,
+            "qualidade": "pobre",
+            "categoria": "casa",
+            "descricao": "Uma mesa de madeira reciclada.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 14,
+        "fields": {
+            "nome": "Joia de Esmeralda",
+            "preco_sugerido": 80.0,
+            "qualidade": "pobre",
+            "categoria": "luxo",
+            "descricao": "Uma joia brilhante.",
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.item",
+        "pk": 15,
+        "fields": {
+            "nome": "Pulseira de ouro",
+            "preco_sugerido": 200.0,
+            "qualidade": "excelente",
+            "categoria": "luxo",
+            "descricao": "Uma pulseira de ouro.",
+            "ativo": true
+        }
+    },
     {
         "model": "bot.estilovida",
         "pk": 1,
@@ -23,106 +202,191 @@
     },
     {
         "model": "bot.gastossemanais",
+        "pk": 1,
         "fields": {
             "estiloVida": 1,
             "tipo": "alimentos",
-            "gastoPercentual": 60
+            "gastoPercentual": 60.0
         }
     },
     {
         "model": "bot.gastossemanais",
+        "pk": 2,
         "fields": {
             "estiloVida": 1,
             "tipo": "transporte",
-            "gastoPercentual": 10
+            "gastoPercentual": 10.0
         }
     },
     {
         "model": "bot.gastossemanais",
+        "pk": 3,
         "fields": {
             "estiloVida": 1,
             "tipo": "academico",
-            "gastoPercentual": 0
+            "gastoPercentual": 0.0
         }
     },
     {
         "model": "bot.gastossemanais",
+        "pk": 4,
         "fields": {
             "estiloVida": 1,
             "tipo": "agricultura",
-            "gastoPercentual": 20
+            "gastoPercentual": 20.0
         }
     },
     {
         "model": "bot.gastossemanais",
+        "pk": 5,
         "fields": {
             "estiloVida": 1,
             "tipo": "casa",
-            "gastoPercentual": 5
+            "gastoPercentual": 5.0
         }
     },
     {
         "model": "bot.gastossemanais",
+        "pk": 6,
         "fields": {
             "estiloVida": 1,
             "tipo": "equipamento",
-            "gastoPercentual": 5
+            "gastoPercentual": 5.0
         }
     },
     {
         "model": "bot.gastossemanais",
+        "pk": 7,
         "fields": {
             "estiloVida": 1,
             "tipo": "luxo",
-            "gastoPercentual": 0
+            "gastoPercentual": 0.0
         }
     },
     {
-        "model": "bot.item",
-        "pk": 1,
+        "model": "bot.gastossemanais",
+        "pk": 8,
         "fields": {
-            "nome": "Espada",
-            "preco_sugerido": 500.0,
-            "qualidade": "excelente",
-            "categoria": "equipamento",
-            "descricao": "Usada para matar!!!!!!!!!!!!!!!!!",
-            "ativo": true
+            "estiloVida": 2,
+            "tipo": "alimentos",
+            "gastoPercentual": 40.0
         }
     },
     {
-        "model": "bot.item",
-        "pk": 2,
+        "model": "bot.gastossemanais",
+        "pk": 9,
         "fields": {
-            "nome": "Gold",
-            "preco_sugerido": 0.0,
-            "qualidade": "excelente",   
-            "categoria": "luxo",
-            "descricao": "peças de ouro",
-            "ativo": true
+            "estiloVida": 2,
+            "tipo": "transporte",
+            "gastoPercentual": 10.0
         }
     },
     {
-        "model": "bot.item",
-        "pk": 3,
+        "model": "bot.gastossemanais",
+        "pk": 10,
         "fields": {
-            "nome": "Cerveja",
-            "preco_sugerido": 1,
-            "qualidade": "pobre",   
-            "categoria": "alimentos",
-            "descricao": "O gosto não sai da sua boca até realizar um descanso curto.",
-            "ativo": true
+            "estiloVida": 2,
+            "tipo": "academico",
+            "gastoPercentual": 30.0
         }
     },
     {
-        "model": "bot.item",
-        "pk": 4,
+        "model": "bot.gastossemanais",
+        "pk": 11,
         "fields": {
-            "nome": "Suco de frutas",
-            "preco_sugerido": 3,
-            "qualidade": "medio",   
-            "categoria": "alimentos",
-            "descricao": "Rede 1d4x25 copos.",
-            "ativo": true
+            "estiloVida": 2,
+            "tipo": "agricultura",
+            "gastoPercentual": 0.0
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "pk": 12,
+        "fields": {
+            "estiloVida": 2,
+            "tipo": "casa",
+            "gastoPercentual": 5.0
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "pk": 13,
+        "fields": {
+            "estiloVida": 2,
+            "tipo": "equipamento",
+            "gastoPercentual": 10.0
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "pk": 14,
+        "fields": {
+            "estiloVida": 2,
+            "tipo": "luxo",
+            "gastoPercentual": 5.0
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "pk": 15,
+        "fields": {
+            "estiloVida": 3,
+            "tipo": "alimentos",
+            "gastoPercentual": 30.0
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "pk": 16,
+        "fields": {
+            "estiloVida": 3,
+            "tipo": "transporte",
+            "gastoPercentual": 5.0
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "pk": 17,
+        "fields": {
+            "estiloVida": 3,
+            "tipo": "academico",
+            "gastoPercentual": 30.0
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "pk": 18,
+        "fields": {
+            "estiloVida": 3,
+            "tipo": "agricultura",
+            "gastoPercentual": 0.0
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "pk": 19,
+        "fields": {
+            "estiloVida": 3,
+            "tipo": "casa",
+            "gastoPercentual": 15.0
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "pk": 20,
+        "fields": {
+            "estiloVida": 3,
+            "tipo": "equipamento",
+            "gastoPercentual": 0.0
+        }
+    },
+    {
+        "model": "bot.gastossemanais",
+        "pk": 21,
+        "fields": {
+            "estiloVida": 3,
+            "tipo": "luxo",
+            "gastoPercentual": 20.0
         }
     },
     {
@@ -145,6 +409,58 @@
             "nome": "Dursin",
             "raca": "osteon",
             "classe": "inventor",
+            "tipo": "npc",
+            "ativo": true,
+            "dono": 1,
+            "estiloVida": 2
+        }
+    },
+    {
+        "model": "bot.personagem",
+        "pk": 3,
+        "fields": {
+            "nome": "Caio",
+            "raca": "osteon",
+            "classe": "ladino",
+            "tipo": "npc",
+            "ativo": true,
+            "dono": 1,
+            "estiloVida": 2
+        }
+    },
+    {
+        "model": "bot.personagem",
+        "pk": 4,
+        "fields": {
+            "nome": "Pedro",
+            "raca": "minotauro",
+            "classe": "barbaro",
+            "tipo": "npc",
+            "ativo": true,
+            "dono": 1,
+            "estiloVida": 1
+        }
+    },
+    {
+        "model": "bot.personagem",
+        "pk": 5,
+        "fields": {
+            "nome": "Daikuro",
+            "raca": "medusa",
+            "classe": "druida",
+            "tipo": "npc",
+            "ativo": true,
+            "dono": 1,
+            "estiloVida": 3
+        }
+    },
+    {
+        "model": "bot.personagem",
+        "pk": 6,
+        "fields": {
+            "nome": "Luffy",
+            "raca": "hynne",
+            "classe": "nobre",
             "tipo": "npc",
             "ativo": true,
             "dono": 1,
@@ -176,7 +492,7 @@
         "pk": 1,
         "fields": {
             "password": "pbkdf2_sha256$260000$8FMUDl4qWjZOm9VFP23n4a$uVBvzEvD75thH5fZ264GwAsgohzufW+fKUHM1ubApBU=",
-            "last_login": "2021-10-14T14:07:58.072Z",
+            "last_login": "2021-10-18T00:27:58.040Z",
             "is_superuser": true,
             "first_name": "",
             "last_name": "",
@@ -192,20 +508,56 @@
     },
     {
         "model": "bot.itempersonagem",
-        "pk": 1,
+        "pk": 3,
         "fields": {
             "personagem": 1,
-            "item": 1,
-            "quantidade": 1
+            "item": 2,
+            "quantidade": 200
         }
     },
     {
         "model": "bot.itempersonagem",
-        "pk": 2,
+        "pk": 4,
         "fields": {
             "personagem": 2,
-            "item": 1,
-            "quantidade": 1
+            "item": 2,
+            "quantidade": 300
+        }
+    },
+    {
+        "model": "bot.itempersonagem",
+        "pk": 5,
+        "fields": {
+            "personagem": 3,
+            "item": 2,
+            "quantidade": 400
+        }
+    },
+    {
+        "model": "bot.itempersonagem",
+        "pk": 6,
+        "fields": {
+            "personagem": 4,
+            "item": 2,
+            "quantidade": 500
+        }
+    },
+    {
+        "model": "bot.itempersonagem",
+        "pk": 7,
+        "fields": {
+            "personagem": 5,
+            "item": 2,
+            "quantidade": 600
+        }
+    },
+    {
+        "model": "bot.itempersonagem",
+        "pk": 8,
+        "fields": {
+            "personagem": 6,
+            "item": 2,
+            "quantidade": 700
         }
     },
     {
@@ -220,6 +572,28 @@
         }
     },
     {
+        "model": "bot.loja",
+        "pk": 2,
+        "fields": {
+            "nome": "Lojona",
+            "cidade": 2,
+            "caixa": 90000.0,
+            "responsavel": 6,
+            "ativo": true
+        }
+    },
+    {
+        "model": "bot.loja",
+        "pk": 3,
+        "fields": {
+            "nome": "Americanas",
+            "cidade": 1,
+            "caixa": 8000.0,
+            "responsavel": 2,
+            "ativo": true
+        }
+    },
+    {
         "model": "bot.estoque",
         "pk": 1,
         "fields": {
@@ -227,6 +601,196 @@
             "preco_item": 100.0,
             "loja": 1,
             "item": 1
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 2,
+        "fields": {
+            "quantidade_item": 80,
+            "preco_item": 4.0,
+            "loja": 3,
+            "item": 3
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 3,
+        "fields": {
+            "quantidade_item": 16,
+            "preco_item": 20.0,
+            "loja": 2,
+            "item": 11
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 4,
+        "fields": {
+            "quantidade_item": 3,
+            "preco_item": 4.0,
+            "loja": 2,
+            "item": 1
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 5,
+        "fields": {
+            "quantidade_item": 3,
+            "preco_item": 4.0,
+            "loja": 3,
+            "item": 1
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 6,
+        "fields": {
+            "quantidade_item": 3,
+            "preco_item": 2.0,
+            "loja": 1,
+            "item": 3
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 7,
+        "fields": {
+            "quantidade_item": 79,
+            "preco_item": 90.0,
+            "loja": 3,
+            "item": 4
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 8,
+        "fields": {
+            "quantidade_item": 12,
+            "preco_item": 12.0,
+            "loja": 3,
+            "item": 5
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 9,
+        "fields": {
+            "quantidade_item": 12,
+            "preco_item": 12.0,
+            "loja": 2,
+            "item": 5
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 10,
+        "fields": {
+            "quantidade_item": 34,
+            "preco_item": 200.0,
+            "loja": 3,
+            "item": 6
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 11,
+        "fields": {
+            "quantidade_item": 2,
+            "preco_item": 190.0,
+            "loja": 2,
+            "item": 6
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 12,
+        "fields": {
+            "quantidade_item": 2,
+            "preco_item": 45.0,
+            "loja": 3,
+            "item": 7
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 13,
+        "fields": {
+            "quantidade_item": 8,
+            "preco_item": 40.0,
+            "loja": 1,
+            "item": 7
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 14,
+        "fields": {
+            "quantidade_item": 2,
+            "preco_item": 34.0,
+            "loja": 3,
+            "item": 8
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 15,
+        "fields": {
+            "quantidade_item": 3,
+            "preco_item": 56.0,
+            "loja": 2,
+            "item": 10
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 16,
+        "fields": {
+            "quantidade_item": 15,
+            "preco_item": 58.0,
+            "loja": 1,
+            "item": 11
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 17,
+        "fields": {
+            "quantidade_item": 2,
+            "preco_item": 60.0,
+            "loja": 2,
+            "item": 12
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 18,
+        "fields": {
+            "quantidade_item": 4,
+            "preco_item": 70.0,
+            "loja": 3,
+            "item": 13
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 19,
+        "fields": {
+            "quantidade_item": 1,
+            "preco_item": 200.0,
+            "loja": 3,
+            "item": 14
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "pk": 20,
+        "fields": {
+            "quantidade_item": 1,
+            "preco_item": 200.0,
+            "loja": 2,
+            "item": 15
         }
     }
 ]

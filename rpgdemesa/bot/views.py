@@ -97,7 +97,8 @@ class ItemPersonagemViewSet(viewsets.ModelViewSet):
             item_personagem.quantidade = nova_quantidade
             item_personagem.save()
         elif nova_quantidade == 0:
-            item_personagem.delete()
+            if(item_personagem.item.nome != 'Ouro'):
+                item_personagem.delete()
         else:
             return JsonResponse({'message': 'Não é possível remover essa quantidade de itens'},
                                 status=status.HTTP_403_FORBIDDEN)
@@ -199,11 +200,15 @@ class LojaViewSet(viewsets.ModelViewSet):
         id_loja = request.data['idLoja']
         id_item = request.data['idItem']
         quantidade = int(request.data['quantidade'])
-        estoque = Estoque.objects.get(loja=id_loja, item=id_item)
-        personagem = Personagem.objects.get(id=request.data['idPersonagem'])
+
+        try:
+            estoque = Estoque.objects.get(loja=id_loja, item=id_item)
+            personagem = Personagem.objects.get(id=request.data['idPersonagem'])
+        except ObjectDoesNotExist:
+            return JsonResponse({'message': 'Este item não está mais disponível'}, status=status.HTTP_404_NOT_FOUND)
 
         gold_personagem = personagem.itempersonagem_set.get(
-            item=Item.objects.get(nome='Gold'))
+            item=Item.objects.get(nome='Ouro'))
 
         valor_compra = estoque.preco_item * quantidade
         personagem_has_gold = gold_personagem.quantidade >= valor_compra
@@ -243,12 +248,12 @@ class LojaViewSet(viewsets.ModelViewSet):
                                  'personagemHasGold': personagem_has_gold}, status=status.HTTP_200_OK)
 
     def comprar_por_tipo(self, gastoSemanal, dinheiro_total, idPersonagem):
-        estoques = Estoque.objects.all()
         carrinho_compras = []
         dinheiro_atual = dinheiro_total
         consegue_comprar = True
 
         while(consegue_comprar):
+            estoques = Estoque.objects.all()
             comprou_algo = False
             for estoque in estoques:
                 if estoque.item.categoria == gastoSemanal.tipo:
@@ -257,16 +262,16 @@ class LojaViewSet(viewsets.ModelViewSet):
                         dinheiro_atual = dinheiro_atual - estoque.preco_item
                         comprou_algo = True
 
-            #comprar
             for compra in carrinho_compras:
                 request_comprar = HttpRequest()
                 request_comprar.data = {'idLoja': compra['lojaId'], 'idItem': compra['itemId'], 'quantidade': 1, 'idPersonagem': idPersonagem}
-                self.comprar_item(request=request_comprar)
+                print(request_comprar.data)
+                retorno = self.comprar_item(request=request_comprar)
 
             if(dinheiro_atual == 0 or comprou_algo == False):
                 consegue_comprar = False
 
-        return carrinho_compras
+            carrinho_compras = []
 
     @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='realizar_compras_semanais',
             url_name='realizar_compras_semanais', detail=False)
@@ -274,7 +279,6 @@ class LojaViewSet(viewsets.ModelViewSet):
         
         try:
             personagens = Personagem.objects.filter(tipo='npc')
-            carrinho_compras = []
 
             for personagem in personagens:
                 renda = personagem.getOuro()
@@ -286,15 +290,14 @@ class LojaViewSet(viewsets.ModelViewSet):
                     gastos_por_tipo[gastoSemanal.tipo] = renda * (gastoSemanal.gastoPercentual / 100)
 
                 for gastoSemanal in gastosSemanais:
-                    carrinho_compras = carrinho_compras + self.comprar_por_tipo(gastoSemanal, gastos_por_tipo[gastoSemanal.tipo], personagem.id)
+                    self.comprar_por_tipo(gastoSemanal, gastos_por_tipo[gastoSemanal.tipo], personagem.id)
 
             return JsonResponse({'message': 'Compras efetuadas'},
                                 status=status.HTTP_200_OK)
-        except ObjectDoesNotExist:
-            pass
-
-        return JsonResponse({'message': 'Compras efetuadas'},
-                                status=status.HTTP_200_OK)   
+        except ObjectDoesNotExist as e:
+            print(e)
+            return JsonResponse({'message': 'Erro ao efetuar compra'},
+                                    status=status.HTTP_200_OK)   
 
 class EstoqueViewSet(viewsets.ModelViewSet):
     queryset = Estoque.objects.all()
