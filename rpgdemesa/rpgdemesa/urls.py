@@ -28,7 +28,9 @@ router.register(r'cidade', views.CidadeViewSet)
 router.register(r'jogador', views.JogadorViewSet)
 router.register(r'inventario', views.ItemPersonagemViewSet)
 router.register(r'estoque', views.EstoqueViewSet)
-
+router.register(r'historico', views.HistoricoViewSet)
+router.register(r'estilovida', views.EstiloVidaViewSet)
+router.register(r'gastosSemanais', views.GastosSemanaisViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

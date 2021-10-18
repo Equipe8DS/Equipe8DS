@@ -7,13 +7,27 @@ from bot.models import Personagem
 from bot.models import Loja
 from bot.models import ItemPersonagem
 from bot.models import Estoque
+from bot.models import Historico
+from bot.models import EstiloVida
+from bot.models import GastosSemanais
+
+class EstiloVidaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = EstiloVida
+        fields = ['pk', 'nome']
+
+class GastosSemanaisSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = GastosSemanais
+        fields = ['pk', 'estiloVida', 'tipo', 'gastoPercentual']
 
 class PersonagemSerializer(serializers.HyperlinkedModelSerializer):
     dono = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    estiloVida_id = serializers.PrimaryKeyRelatedField(queryset=EstiloVida.objects.all(), source='estiloVida')
 
     class Meta:
         model = Personagem
-        fields = ['pk', 'nome', 'raca', 'classe', 'tipo', 'ativo', 'dono']
+        fields = ['pk', 'nome', 'raca', 'classe', 'tipo', 'ativo', 'dono', 'estiloVida_id']
         depth = 1
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
@@ -28,7 +42,7 @@ class ItemPersonagemSerializer(serializers.ModelSerializer):
     personagem_id = serializers.PrimaryKeyRelatedField(queryset=Personagem.objects.all(), source='personagem')
     
     class Meta:
-        model = ItemPersonagem
+        model = ItemPersonagem      
         fields = ['pk', 'item_id', 'item', 'personagem_id', 'quantidade']
         depth = 1
 
@@ -50,17 +64,35 @@ class JogadorSerializer(serializers.HyperlinkedModelSerializer):
         validated_data['password'] = make_password(validated_data.get('password'))
         return super(JogadorSerializer, self).create(validated_data)
 
+class LojaSerializer(serializers.ModelSerializer) :
+    responsavel_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Personagem.objects.all(), source='responsavel')
+    responsavel = serializers.SlugRelatedField(read_only=True, many=False, slug_field="nome")
 
-class EstoqueSerializer(serializers.HyperlinkedModelSerializer) :
+    estok = ItemSerializer (many=True, read_only=True) 
 
-    class Meta :
-        model = Estoque
-        fields = ['item', 'quantidade_item', 'preco_item', 'loja',]
+    cidade_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Cidade.objects.all(), source='cidade')
+    cidade = serializers.SlugRelatedField(read_only=True, many=False, slug_field="nome")
 
-class LojaSerializer(serializers.HyperlinkedModelSerializer) :
-    itens = EstoqueSerializer (read_only=True) 
+    read_only_fields = ('pk')
 
     class Meta :
         model = Loja
-        fields = ['nome', 'responsavel', 'cidade', 'itens', 'caixa', 'ativo']
+        fields = ['pk', 'nome', 'responsavel_id', 'responsavel', 'cidade_id', 'cidade', 'estok', 'caixa', 'ativo']
+        depth = 1
 
+class EstoqueSerializer(serializers.HyperlinkedModelSerializer) :
+    
+    loja_id = serializers.PrimaryKeyRelatedField(queryset=Loja.objects.all(), source='loja')
+    item_id = serializers.PrimaryKeyRelatedField(queryset=Item.objects.all(), source='item')
+
+    class Meta :
+        model = Estoque
+        fields = ['item', 'item_id', 'quantidade_item', 'preco_item', 'loja_id',]
+        depth = 1
+
+class HistoricoSerializer(serializers.HyperlinkedModelSerializer) :
+    
+    class Meta :
+        model = Historico
+        fields = ['loja', 'item', 'personagem', 'quantidade', 'tipo','preco', 'data', 'descricao']
+        depth = 1
