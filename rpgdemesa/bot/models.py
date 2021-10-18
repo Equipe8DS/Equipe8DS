@@ -5,17 +5,9 @@ from django.db.models.fields import CharField
 from django.utils.translation import gettext as _
 from rest_framework.reverse import reverse
 from datetime import datetime
+from django.core.exceptions import ObjectDoesNotExist
 
-
-class Item(models.Model):
-    QUALIDADE = [
-        (None, '<selecione>'),
-        ('ruim', 'Ruim'),
-        ('pobre', 'Pobre'),
-        ('medio', 'Médio'),
-        ('bom', 'Bom'),
-        ('excelente', 'Excelente')
-    ]
+class CategoriaItens:
     CATEGORIA = [
         (None, '<selecione>'),
         ('alimentos', 'Alimentos'),
@@ -26,6 +18,18 @@ class Item(models.Model):
         ('equipamento', 'Equipamento'),
         ('luxo', 'Luxo')
     ]
+    
+class Item(models.Model):
+    QUALIDADE = [
+        (None, '<selecione>'),
+        ('ruim', 'Ruim'),
+        ('pobre', 'Pobre'),
+        ('medio', 'Médio'),
+        ('bom', 'Bom'),
+        ('excelente', 'Excelente')
+    ]
+    CATEGORIA = CategoriaItens.CATEGORIA
+
     nome = models.CharField(max_length=100, blank=False, )
     preco_sugerido = models.FloatField(
         max_length=100, null=False, verbose_name='Preço Sugerido')
@@ -46,6 +50,27 @@ class Item(models.Model):
         return reverse("item_detail", kwargs={"pk": self.pk})
 
 
+class EstiloVida(models.Model):
+    nome = models.CharField(max_length=100, null=False)
+
+    class Meta:
+        verbose_name = _("estilovida")
+        verbose_name_plural = _("estilosdevida")
+
+    def __str__(self):
+        return self.nome
+
+class GastosSemanais(models.Model):
+    CATEGORIA = CategoriaItens.CATEGORIA
+
+    estiloVida = models.ForeignKey(EstiloVida, on_delete=models.DO_NOTHING, null=False)
+    tipo = models.CharField(max_length=30, null=False, choices=CATEGORIA)
+    gastoPercentual = models.FloatField(null=False)
+
+    class Meta:
+        verbose_name = _("gastossemanais")
+        verbose_name_plural = _("gastossemanais")
+
 class Personagem(models.Model):
     RACAS = [
         (None, '<selecione>'),
@@ -62,7 +87,7 @@ class Personagem(models.Model):
         ('kliren', 'Kliren'),
         ('medusa', 'Medusa'),
         ('osteon', 'Osteon'),
-        ('sereia/tritão', 'Sereia/Tritão'),
+        ('sereia/tritao', 'Sereia/Tritão'),
         ('silfide', 'Silfide'),
         ('aggelos', 'Aggelos'),
         ('sufulre', 'Sufulre'),
@@ -73,12 +98,12 @@ class Personagem(models.Model):
         ('mago', 'Mago'),
         ('bruxo', 'Bruxo'),
         ('feiticeiro', 'Feiticeiro'),
-        ('bárbaro', 'Bárbaro'),
+        ('barbaro', 'Bárbaro'),
         ('bardo', 'Bardo'),
-        ('caçador', 'Caçador'),
+        ('cacador', 'Caçador'),
         ('cavaleiro', 'Cavaleiro'),
-        ('clérigo', 'Clérigo'),
-        ('druída', 'Druída'),
+        ('clerigo', 'Clérigo'),
+        ('druida', 'Druída'),
         ('guerreiro', 'Guerreiro'),
         ('inventor', 'Inventor'),
         ('ladino', 'Ladino'),
@@ -96,6 +121,7 @@ class Personagem(models.Model):
     dono = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     inventario = models.ManyToManyField(Item, through='ItemPersonagem')
+    estiloVida = models.ForeignKey(EstiloVida, on_delete=models.DO_NOTHING, null=True)
 
     class Meta:
         verbose_name = _("personagem")
@@ -111,6 +137,15 @@ class Personagem(models.Model):
         if (self.dono.is_staff):
             self.tipo = 'npc'
         super(Personagem, self).save()
+    
+    def getOuro(self):
+        try:
+            item = self.inventario.get(nome='Ouro')
+            return ItemPersonagem.objects.get(item=item, personagem=self).quantidade
+        except ObjectDoesNotExist as e:
+            print(self.nome)
+            print(e)
+            return 0
 
 
 class Cidade(models.Model):

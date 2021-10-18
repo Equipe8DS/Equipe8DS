@@ -8,13 +8,26 @@ from bot.models import Loja
 from bot.models import ItemPersonagem
 from bot.models import Estoque
 from bot.models import Historico
+from bot.models import EstiloVida
+from bot.models import GastosSemanais
+
+class EstiloVidaSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = EstiloVida
+        fields = ['pk', 'nome']
+
+class GastosSemanaisSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = GastosSemanais
+        fields = ['pk', 'estiloVida', 'tipo', 'gastoPercentual']
 
 class PersonagemSerializer(serializers.HyperlinkedModelSerializer):
     dono = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    estiloVida_id = serializers.PrimaryKeyRelatedField(queryset=EstiloVida.objects.all(), source='estiloVida')
 
     class Meta:
         model = Personagem
-        fields = ['pk', 'nome', 'raca', 'classe', 'tipo', 'ativo', 'dono']
+        fields = ['pk', 'nome', 'raca', 'classe', 'tipo', 'ativo', 'dono', 'estiloVida_id']
         depth = 1
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
