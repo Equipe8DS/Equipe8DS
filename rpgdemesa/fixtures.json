@@ -502,6 +502,7 @@
             "is_active": true,
             "email": "admin@admin.com",
             "username": "admin",
+            "uid_telegram": "113927682",
             "groups": [],
             "user_permissions": []
         }

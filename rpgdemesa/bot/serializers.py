@@ -58,7 +58,7 @@ class JogadorSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Jogador
-        fields = ['pk', 'nome', 'is_active', 'email', 'password', 'username']
+        fields = ['pk', 'nome', 'is_active', 'email', 'password', 'username', 'uid_telegram']
 
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data.get('password'))

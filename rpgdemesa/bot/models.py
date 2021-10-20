@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils.translation import gettext as _
 from rest_framework.reverse import reverse
-
+from rest_framework import permissions
 
 class CategoriaItens:
     CATEGORIA = [
@@ -209,10 +209,11 @@ class Cidade(models.Model):
 
 
 class Jogador(AbstractUser):
-    nome = models.CharField(max_length=100, )
+    nome = models.CharField(max_length=100)
     is_active = models.BooleanField(editable=False, default=True)
-    email = models.CharField(unique=True, max_length=100)
+    email = models.CharField(unique=True, max_length=100, null=True)
     username = models.CharField(unique=True, max_length=15)
+    uid_telegram = models.CharField(unique=True, max_length=100, null=True)
 
     # perfil = models.CharField (editable = False, default = 'jogador')
 

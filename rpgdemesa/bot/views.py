@@ -28,6 +28,20 @@ from bot.serializers import LojaSerializer
 from bot.serializers import PersonagemSerializer
 
 
+class PermissionToTelegram(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return True
+
+        try:
+           uid_telegram = request.data['uid_telegram']
+
+           jogador = Jogador.objects.get(uid_telegram=uid_telegram)
+           if jogador is not None:
+               return True
+        except ObjectDoesNotExist:
+            return False
+
 @api_view(['PUT'])
 def remover_item_inventario(request, pk):
     try:
@@ -51,11 +65,11 @@ def remover_item_inventario(request, pk):
 class ItemPersonagemViewSet(viewsets.ModelViewSet):
     queryset = ItemPersonagem.objects.all()
     serializer_class = ItemPersonagemSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['personagem_id']
 
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='add-item-inventario',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='add-item-inventario',
             url_name='add_item_inventario', detail=False)
     def add_item_inventario(self, request):
         id_personagem = request.data['idPersonagem']
@@ -70,7 +84,7 @@ class ItemPersonagemViewSet(viewsets.ModelViewSet):
         except ObjectDoesNotExist:
             return JsonResponse({'message': 'Erro ao adicionar item'}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='remover-item-inventario',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='remover-item-inventario',
             url_name='remover_item_inventario', detail=False)
     def remover_item_inventario(self, request):
         id_personagem = request.data['idPersonagem']
@@ -88,7 +102,7 @@ class ItemPersonagemViewSet(viewsets.ModelViewSet):
 class PersonagemViewSet(viewsets.ModelViewSet):
     queryset = Personagem.objects.all()
     serializer_class = PersonagemSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
     filterset_fields = ['nome']
 
     def destroy(self, request, *args, **kwargs):
@@ -101,7 +115,7 @@ class PersonagemViewSet(viewsets.ModelViewSet):
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
     filterset_fields = ['nome']
 
     def destroy(self, request, *args, **kwargs):
@@ -123,7 +137,7 @@ class ItemViewSet(viewsets.ModelViewSet):
 class CidadeViewSet(viewsets.ModelViewSet):
     queryset = Cidade.objects.all()
     serializer_class = CidadeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
 
     def destroy(self, request, *args, **kwargs):
         cidade = self.get_object()
@@ -135,13 +149,14 @@ class CidadeViewSet(viewsets.ModelViewSet):
 class JogadorViewSet(viewsets.ModelViewSet):
     queryset = Jogador.objects.all()
     serializer_class = JogadorSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
+    filterset_fields = ['uid_telegram']
 
     def get_permissions(self):
         if self.action == 'create':
             permission_classes = [permissions.AllowAny]
         else:
-            permission_classes = [permissions.IsAuthenticated]
+            permission_classes = [PermissionToTelegram]
 
         return [permission() for permission in permission_classes]
 
@@ -162,7 +177,7 @@ class LojaViewSet(viewsets.ModelViewSet):
         if self.action != 'list':
             permission_classes = [permissions.IsAdminUser]
         else:
-            permission_classes = [permissions.AllowAny]
+            permission_classes = [PermissionToTelegram]
         return [permission() for permission in permission_classes]
 
     def destroy(self, request, *args, **kwargs):
@@ -171,7 +186,7 @@ class LojaViewSet(viewsets.ModelViewSet):
         loja.save()
         return Response({'status': status.HTTP_200_OK})
 
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='comprar-item',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='comprar-item',
             url_name='comprar_item', detail=False)
     def comprar_item(self, request):
         id_loja = request.data['idLoja']
@@ -236,7 +251,7 @@ class LojaViewSet(viewsets.ModelViewSet):
 
             carrinho_compras = []
 
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='realizar_compras_semanais',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='realizar_compras_semanais',
             url_name='realizar_compras_semanais', detail=False)
     def realizar_compras_semanais(self, request):
 
@@ -266,10 +281,10 @@ class LojaViewSet(viewsets.ModelViewSet):
 class EstoqueViewSet(viewsets.ModelViewSet):
     queryset = Estoque.objects.all()
     serializer_class = EstoqueSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
     filterset_fields = ['loja_id']
 
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='add-item-loja',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='add-item-loja',
             url_name='add_item_loja', detail=False)
     def add_item_loja(self, request):
         id_loja = request.data['idLoja']
@@ -281,7 +296,7 @@ class EstoqueViewSet(viewsets.ModelViewSet):
         resultado = loja.add_item(id_item=id_item, quantidade=quantidade, preco=preco)
         return JsonResponse({'message': resultado}, status=status.HTTP_200_OK)
 
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='remove-item-loja',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='remove-item-loja',
             url_name='remove_item_loja', detail=False)
     def remove_item_loja(self, request):
         id_loja = request.data['idLoja']
@@ -299,16 +314,16 @@ class EstoqueViewSet(viewsets.ModelViewSet):
 class HistoricoViewSet(viewsets.ModelViewSet):
     queryset = Historico.objects.all()
     serializer_class = HistoricoSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
 
 
 class EstiloVidaViewSet(viewsets.ModelViewSet):
     queryset = EstiloVida.objects.all()
     serializer_class = EstiloVidaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
 
 
 class GastosSemanaisViewSet(viewsets.ModelViewSet):
     queryset = GastosSemanais.objects.all()
     serializer_class = GastosSemanaisSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
