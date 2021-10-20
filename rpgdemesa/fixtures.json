@@ -595,6 +595,33 @@
     },
     {
         "model": "bot.estoque",
+        "fields": {
+            "quantidade_item": 1000,
+            "preco_item": 1,
+            "loja": 1,
+            "item": 2
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "fields": {
+            "quantidade_item": 1000,
+            "preco_item": 1,
+            "loja": 2,
+            "item": 2
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "fields": {
+            "quantidade_item": 1000,
+            "preco_item": 1,
+            "loja": 3,
+            "item": 2
+        }
+    },
+    {
+        "model": "bot.estoque",
         "pk": 1,
         "fields": {
             "quantidade_item": 5,
