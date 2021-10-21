@@ -269,11 +269,11 @@ class Loja(models.Model):
 
     def add_item(self, id_item, quantidade, preco=None):
         try:
-            estoque = self.estoque_set.get(item=id_item)
+            estoque = self.estoque_set.get(item_id=id_item)
             estoque.quantidade_item += quantidade
             estoque.save()
         except ObjectDoesNotExist:
-            item = Item.objects.get(item=id_item)
+            item = Item.objects.get(id=id_item)
             preco = preco if not None else item.preco_sugerido
             self.estoque_set.create(item_id=item, quantidade_item=quantidade, preco_item=preco)
 
