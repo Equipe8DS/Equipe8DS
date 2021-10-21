@@ -315,6 +315,7 @@ class HistoricoViewSet(viewsets.ModelViewSet):
     queryset = Historico.objects.all()
     serializer_class = HistoricoSerializer
     permission_classes = [PermissionToTelegram]
+    filterset_fields = ['loja_id', 'personagem_id', 'tipo']
 
 
 class EstiloVidaViewSet(viewsets.ModelViewSet):
