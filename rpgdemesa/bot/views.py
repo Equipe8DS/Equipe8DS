@@ -173,10 +173,10 @@ class LojaViewSet(viewsets.ModelViewSet):
     filterset_fields = ['nome']
 
     def get_permissions(self):
-        if self.action == 'list' or self.action == 'comprar_item':
-            permission_classes = [PermissionToTelegram]
-        else:
+        if self.action == 'create':
             permission_classes = [permissions.IsAdminUser]
+        else:
+            permission_classes = [PermissionToTelegram]
         return [permission() for permission in permission_classes]
 
     def destroy(self, request, *args, **kwargs):

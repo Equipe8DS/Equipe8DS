@@ -27,7 +27,7 @@ class PersonagemSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Personagem
-        fields = ['pk', 'nome', 'raca', 'classe', 'tipo', 'ativo', 'dono', 'estiloVida_id']
+        fields = ['pk', 'nome', 'raca', 'classe', 'tipo', 'ativo', 'dono', 'estiloVida_id', 'estiloVida']
         depth = 1
 
 class ItemSerializer(serializers.HyperlinkedModelSerializer):
@@ -51,6 +51,7 @@ class CidadeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Cidade
         fields = ['pk', 'nome', 'tesouro', 'governante', 'ativo']
+        depth = 1
 
 
 class JogadorSerializer(serializers.HyperlinkedModelSerializer):
