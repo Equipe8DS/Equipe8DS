@@ -259,8 +259,8 @@ class LojaViewSet(viewsets.ModelViewSet):
 
         for compra in carrinho_compras:
             request_comprar = HttpRequest()
-            request_comprar.data = {'idLoja': compra['lojaId'], 'idItem': compra['itemId'], 'quantidade': 1,
-                                    'idPersonagem': idPersonagem}
+            request_comprar.data = {'idLoja': compra['lojaId'], 'idItem': compra['itemId'],
+                                    'quantidade': compra['quantidade'], 'idPersonagem': idPersonagem}
             print(request_comprar.data)
             retorno = self.comprar_item(request=request_comprar)
 
