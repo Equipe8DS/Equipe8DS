@@ -596,6 +596,7 @@
     },
     {
         "model": "bot.estoque",
+        "pk": 300,
         "fields": {
             "quantidade_item": 1000,
             "preco_item": 1,
@@ -605,6 +606,7 @@
     },
     {
         "model": "bot.estoque",
+        "pk": 299,
         "fields": {
             "quantidade_item": 1000,
             "preco_item": 1,
@@ -614,6 +616,7 @@
     },
     {
         "model": "bot.estoque",
+        "pk": 298,
         "fields": {
             "quantidade_item": 1000,
             "preco_item": 1,
