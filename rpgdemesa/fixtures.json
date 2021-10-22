@@ -7,7 +7,7 @@
             "preco_sugerido": 500.0,
             "qualidade": "excelente",
             "categoria": "equipamento",
-            "descricao": "Usada para matar!!!!!!!!!!!!!!!!!",
+            "descricao": "Usada para matar.",
             "ativo": true
         }
     },
@@ -43,7 +43,7 @@
             "preco_sugerido": 3.0,
             "qualidade": "medio",
             "categoria": "alimentos",
-            "descricao": "Rede 1d4x25 copos.",
+            "descricao": "Rende 1d4x25 copos.",
             "ativo": true
         }
     },
@@ -565,7 +565,7 @@
         "model": "bot.loja",
         "pk": 1,
         "fields": {
-            "nome": "Lojinha",
+            "nome": "Casas Bahia",
             "cidade": 1,
             "caixa": 500.0,
             "responsavel": 2,
@@ -576,7 +576,7 @@
         "model": "bot.loja",
         "pk": 2,
         "fields": {
-            "nome": "Lojona",
+            "nome": "Amazon",
             "cidade": 2,
             "caixa": 90000.0,
             "responsavel": 6,
