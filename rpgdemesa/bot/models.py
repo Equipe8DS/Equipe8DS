@@ -1,11 +1,12 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.db.models.fields import CharField
 from django.utils.translation import gettext as _
 from rest_framework.reverse import reverse
-from datetime import datetime
-from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import permissions
 
 class CategoriaItens:
     CATEGORIA = [
@@ -18,7 +19,8 @@ class CategoriaItens:
         ('equipamento', 'Equipamento'),
         ('luxo', 'Luxo')
     ]
-    
+
+
 class Item(models.Model):
     QUALIDADE = [
         (None, '<selecione>'),
@@ -38,6 +40,9 @@ class Item(models.Model):
     descricao = models.CharField(
         max_length=100, blank=False, verbose_name='Descrição')
     ativo = models.BooleanField(editable=False, default=True)
+
+    def isOuro(self):
+        return self.nome == 'Ouro'
 
     class Meta:
         verbose_name = _("item")
@@ -60,6 +65,7 @@ class EstiloVida(models.Model):
     def __str__(self):
         return self.nome
 
+
 class GastosSemanais(models.Model):
     CATEGORIA = CategoriaItens.CATEGORIA
 
@@ -70,6 +76,7 @@ class GastosSemanais(models.Model):
     class Meta:
         verbose_name = _("gastossemanais")
         verbose_name_plural = _("gastossemanais")
+
 
 class Personagem(models.Model):
     RACAS = [
@@ -137,7 +144,43 @@ class Personagem(models.Model):
         if (self.dono.is_staff):
             self.tipo = 'npc'
         super(Personagem, self).save()
-    
+
+    def add_item_inventario(self, item, quantidade):
+        try:
+            inventario = self.itempersonagem_set.get(item=item)
+            inventario.quantidade += quantidade
+            inventario.save()
+        except ObjectDoesNotExist:
+            self.itempersonagem_set.create(item_id=item, quantidade=quantidade)
+            self.save()
+
+        historico = Historico(personagem_id=self.id, item_id=item, quantidade=quantidade, tipo='inclusao')
+        historico.save()
+        return 'Item adicionado ao inventário'
+
+
+    def remove_item_inventario(self, id_item, quantidade):
+        inventario = self.itempersonagem_set.get(item=id_item)
+        nova_quantidade = inventario.quantidade - quantidade
+
+        if nova_quantidade < 0:
+            raise Exception(f'Não é possível remover {quantidade} {inventario.item.nome}(s).')
+
+        elif nova_quantidade == 0 and not inventario.item.isOuro():
+            inventario.delete()
+
+        else:
+            inventario.quantidade = nova_quantidade
+            inventario.save()
+
+        historico = Historico(personagem_id=self.id, item_id=id_item, quantidade=quantidade, tipo='remocao')
+        historico.save()
+        return 'Item removido do inventário'
+
+    def remove_ouro(self, quantidade):
+        ouro = Item.objects.get(nome='Ouro')
+        return self.remove_item_inventario(id_item=ouro.id, quantidade=quantidade)
+
     def getOuro(self):
         try:
             item = self.inventario.get(nome='Ouro')
@@ -166,10 +209,11 @@ class Cidade(models.Model):
 
 
 class Jogador(AbstractUser):
-    nome = models.CharField(max_length=100, )
+    nome = models.CharField(max_length=100)
     is_active = models.BooleanField(editable=False, default=True)
-    email = models.CharField(unique=True, max_length=100)
+    email = models.CharField(unique=True, max_length=100, null=True)
     username = models.CharField(unique=True, max_length=15)
+    uid_telegram = models.CharField(unique=True, max_length=100, null=True)
 
     # perfil = models.CharField (editable = False, default = 'jogador')
 
@@ -205,6 +249,40 @@ class Loja(models.Model):
                                     verbose_name='Responsável', limit_choices_to={'ativo': True}, )
     estok = models.ManyToManyField(Item, through='Estoque')
     ativo = models.BooleanField(editable=False, default=True)
+
+    def remove_item(self, id_item, quantidade):
+        estoque = self.estoque_set.get(item=id_item)
+        nova_quantidade = estoque.quantidade_item - quantidade
+
+        if nova_quantidade < 0:
+            raise Exception(f'Não é possível remover {quantidade} itens, '
+                            f'essa loja possui apenas {estoque.quantidade_item}.')
+
+        elif nova_quantidade == 0 and not estoque.item.isOuro():
+            estoque.delete()
+
+        else:
+            estoque.quantidade_item = nova_quantidade
+            estoque.save()
+
+        return 'Item removido do estoque.'
+
+    def add_item(self, id_item, quantidade, preco=None):
+        try:
+            estoque = self.estoque_set.get(item_id=id_item)
+            estoque.quantidade_item += quantidade
+            estoque.save()
+        except ObjectDoesNotExist:
+            item = Item.objects.get(id=id_item)
+            preco = preco if not None else item.preco_sugerido
+            self.estoque_set.create(item_id=item, quantidade_item=quantidade, preco_item=preco)
+
+        self.save()
+        return 'Item adicionado ao estoque.'
+
+    def add_ouro(self, quantidade):
+        ouro = Item.objects.get(nome='Ouro')
+        self.add_item(id_item=ouro.id, quantidade=quantidade)
 
     class Meta:
         verbose_name = _("loja")

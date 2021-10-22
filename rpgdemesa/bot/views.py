@@ -9,23 +9,38 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 
 from bot.models import Cidade, Jogador
+from bot.models import EstiloVida
 from bot.models import Estoque
+from bot.models import GastosSemanais
+from bot.models import Historico
 from bot.models import Item
 from bot.models import ItemPersonagem
 from bot.models import Loja
 from bot.models import Personagem
-from bot.models import Historico
-from bot.models import EstiloVida
-from bot.models import GastosSemanais
 from bot.serializers import CidadeSerializer, JogadorSerializer
+from bot.serializers import EstiloVidaSerializer
 from bot.serializers import EstoqueSerializer
+from bot.serializers import GastosSemanaisSerializer
+from bot.serializers import HistoricoSerializer
 from bot.serializers import ItemPersonagemSerializer
 from bot.serializers import ItemSerializer
 from bot.serializers import LojaSerializer
 from bot.serializers import PersonagemSerializer
-from bot.serializers import HistoricoSerializer
-from bot.serializers import EstiloVidaSerializer
-from bot.serializers import GastosSemanaisSerializer
+
+
+class PermissionToTelegram(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return True
+
+        try:
+           uid_telegram = request.data['uid_telegram']
+
+           jogador = Jogador.objects.get(uid_telegram=uid_telegram)
+           if jogador is not None:
+               return True
+        except ObjectDoesNotExist:
+            return False
 
 @api_view(['PUT'])
 def remover_item_inventario(request, pk):
@@ -50,68 +65,44 @@ def remover_item_inventario(request, pk):
 class ItemPersonagemViewSet(viewsets.ModelViewSet):
     queryset = ItemPersonagem.objects.all()
     serializer_class = ItemPersonagemSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['personagem_id']
 
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='add-item-inventario',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='add-item-inventario',
             url_name='add_item_inventario', detail=False)
     def add_item_inventario(self, request):
         id_personagem = request.data['idPersonagem']
         id_item = request.data['idItem']
         quantidade = int(request.data['quantidade'])
         try:
-            inventario = ItemPersonagem.objects.get(
-                personagem=id_personagem, item=id_item)
-            inventario.quantidade += quantidade
-            inventario.save()
-            historico = Historico(
-                personagem_id=id_personagem, item_id=id_item, quantidade=quantidade, tipo='inclusao')
-            historico.save()
-            return JsonResponse({'message': 'Item adicionado ao inventário', 'quantidade': inventario.quantidade},
+            personagem = Personagem.objects.get(id=id_personagem)
+            resultado = personagem.add_item_inventario(item=id_item, quantidade=quantidade)
+            return JsonResponse({'message': resultado, 'quantidade': quantidade},
                                 status=status.HTTP_200_OK)
 
         except ObjectDoesNotExist:
-            personagem = Personagem.objects.get(pk=id_personagem)
-            item = Item.objects.get(pk=id_item)
-            inventario = ItemPersonagem(personagem=personagem, item=item,
-                                        quantidade=quantidade)
-            inventario.save()
-            historico = Historico(
-                personagem_id=id_personagem, item_id=id_item, quantidade=quantidade, tipo='inclusao')
-            historico.save()
-            return JsonResponse({'message': 'Item adicionado ao inventário'}, status=status.HTTP_201_CREATED)
+            return JsonResponse({'message': 'Erro ao adicionar item'}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='remover-item-inventario',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='remover-item-inventario',
             url_name='remover_item_inventario', detail=False)
     def remover_item_inventario(self, request):
         id_personagem = request.data['idPersonagem']
         id_item = request.data['idItem']
         quantidade = int(request.data['quantidade'])
 
-        item_personagem = ItemPersonagem.objects.get(
-            personagem=id_personagem, item=id_item)
-        nova_quantidade = item_personagem.quantidade - quantidade
-
-        if nova_quantidade > 0:
-            item_personagem.quantidade = nova_quantidade
-            item_personagem.save()
-        elif nova_quantidade == 0:
-            if(item_personagem.item.nome != 'Ouro'):
-                item_personagem.delete()
-        else:
-            return JsonResponse({'message': 'Não é possível remover essa quantidade de itens'},
-                                status=status.HTTP_403_FORBIDDEN)
-        historico = Historico(
-            personagem_id=id_personagem, item_id=id_item, quantidade=quantidade, tipo='remocao')
-        historico.save()
-        return JsonResponse({'message': 'Item removido do inventário'}, status=status.HTTP_200_OK)
+        try:
+            personagem = Personagem.objects.get(id=id_personagem)
+            resultado = personagem.remove_item_inventario(id_item=id_item, quantidade=quantidade)
+            return JsonResponse({'message': resultado}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return JsonResponse({'message': e}, status=status.HTTP_404_NOT_FOUND)
 
 
 class PersonagemViewSet(viewsets.ModelViewSet):
     queryset = Personagem.objects.all()
     serializer_class = PersonagemSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
     filterset_fields = ['nome']
 
     def destroy(self, request, *args, **kwargs):
@@ -124,7 +115,7 @@ class PersonagemViewSet(viewsets.ModelViewSet):
 class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
     filterset_fields = ['nome']
 
     def destroy(self, request, *args, **kwargs):
@@ -146,7 +137,7 @@ class ItemViewSet(viewsets.ModelViewSet):
 class CidadeViewSet(viewsets.ModelViewSet):
     queryset = Cidade.objects.all()
     serializer_class = CidadeSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
 
     def destroy(self, request, *args, **kwargs):
         cidade = self.get_object()
@@ -158,13 +149,14 @@ class CidadeViewSet(viewsets.ModelViewSet):
 class JogadorViewSet(viewsets.ModelViewSet):
     queryset = Jogador.objects.all()
     serializer_class = JogadorSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
+    filterset_fields = ['uid_telegram']
 
     def get_permissions(self):
         if self.action == 'create':
             permission_classes = [permissions.AllowAny]
         else:
-            permission_classes = [permissions.IsAuthenticated]
+            permission_classes = [PermissionToTelegram]
 
         return [permission() for permission in permission_classes]
 
@@ -181,11 +173,10 @@ class LojaViewSet(viewsets.ModelViewSet):
     filterset_fields = ['nome']
 
     def get_permissions(self):
-
-        if self.action != 'list':
+        if self.action == 'create':
             permission_classes = [permissions.IsAdminUser]
         else:
-            permission_classes = [permissions.AllowAny]
+            permission_classes = [PermissionToTelegram]
         return [permission() for permission in permission_classes]
 
     def destroy(self, request, *args, **kwargs):
@@ -194,7 +185,7 @@ class LojaViewSet(viewsets.ModelViewSet):
         loja.save()
         return Response({'status': status.HTTP_200_OK})
 
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='comprar-item',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='comprar-item',
             url_name='comprar_item', detail=False)
     def comprar_item(self, request):
         id_loja = request.data['idLoja']
@@ -202,87 +193,73 @@ class LojaViewSet(viewsets.ModelViewSet):
         quantidade = int(request.data['quantidade'])
 
         try:
-            estoque = Estoque.objects.get(loja=id_loja, item=id_item)
+            loja = Loja.objects.get(id=id_loja)
+            estoque = loja.estoque_set.get(item_id=id_item)
             personagem = Personagem.objects.get(id=request.data['idPersonagem'])
         except ObjectDoesNotExist:
             return JsonResponse({'message': 'Este item não está mais disponível'}, status=status.HTTP_404_NOT_FOUND)
 
-        gold_personagem = personagem.itempersonagem_set.get(
-            item=Item.objects.get(nome='Ouro'))
-
+        gold_personagem = personagem.getOuro()
         valor_compra = estoque.preco_item * quantidade
-        personagem_has_gold = gold_personagem.quantidade >= valor_compra
+
+        personagem_has_gold = gold_personagem >= valor_compra
         loja_has_estoque = estoque.quantidade_item >= quantidade
 
         if personagem_has_gold and loja_has_estoque:
-            request_remove_estoque = HttpRequest()
-            request_remove_estoque.data = {
-                'idLoja': id_loja, 'idItem': id_item, 'quantidade': quantidade}
-            EstoqueViewSet.remove_item_loja(
-                EstoqueViewSet(), request=request_remove_estoque)
-            try:
-                request_add_inventario = HttpRequest()
-                request_add_inventario.data = {'idPersonagem': personagem.id, 'idItem': id_item,
-                                               'quantidade': quantidade}
-                ItemPersonagemViewSet.add_item_inventario(
-                    ItemPersonagemViewSet(), request=request_add_inventario)
+            loja.remove_item(id_item=id_item, quantidade=quantidade)
+            personagem.add_item_inventario(item=id_item, quantidade=quantidade)
 
-                request_remove_gold = HttpRequest()
-                request_remove_gold.data = {'idPersonagem': personagem.id, 'idItem': gold_personagem.item.id,
-                                            'quantidade': valor_compra}
-                ItemPersonagemViewSet.remover_item_inventario(ItemPersonagemViewSet(),
-                                                              request=request_remove_gold)
+            personagem.remove_ouro(valor_compra)
+            loja.add_ouro(valor_compra)
 
-            except ObjectDoesNotExist:
-                personagem.itempersonagem_set.create(
-                    item_id=id_item, quantidade=quantidade)
-                personagem.save()
-
-            historico = Historico(
-                personagem_id=personagem.id, item_id=id_item, quantidade=quantidade, tipo='compra', preco=valor_compra, loja_id=id_loja)
+            historico = Historico(personagem_id=personagem.id, item_id=id_item, quantidade=quantidade,
+                                  tipo='compra', preco=valor_compra, loja_id=id_loja)
             historico.save()
 
-            return JsonResponse({'message': f'Compra efetuada. {quantidade} unidade(s) do item {estoque.item.nome} foram compradas pelo valor de {valor_compra} peças de ouro.'}, status=status.HTTP_200_OK)
+            return JsonResponse({'message': f'Compra efetuada. {quantidade} unidade(s) do item {estoque.item.nome} '
+                                            f'foram compradas pelo valor de {valor_compra} peças de ouro.'},
+                                status=status.HTTP_200_OK)
         else:
             return JsonResponse({'message': 'Compra não autorizada.', 'lojaHasEstoque': loja_has_estoque,
-                                 'personagemHasGold': personagem_has_gold}, status=status.HTTP_200_OK)
+                                 'personagemHasGold': personagem_has_gold}, status=status.HTTP_401_UNAUTHORIZED)
 
     def comprar_por_tipo(self, gastoSemanal, dinheiro_total, idPersonagem):
         carrinho_compras = []
         dinheiro_atual = dinheiro_total
         consegue_comprar = True
 
-        while(consegue_comprar):
+        while (consegue_comprar):
             estoques = Estoque.objects.all()
             comprou_algo = False
             for estoque in estoques:
                 if estoque.item.categoria == gastoSemanal.tipo:
-                    if(dinheiro_atual >= estoque.preco_item):
-                        carrinho_compras.append({'lojaId': estoque.loja.id, 'itemId': estoque.item.id}) 
+                    if (dinheiro_atual >= estoque.preco_item):
+                        carrinho_compras.append({'lojaId': estoque.loja.id, 'itemId': estoque.item.id})
                         dinheiro_atual = dinheiro_atual - estoque.preco_item
                         comprou_algo = True
 
             for compra in carrinho_compras:
                 request_comprar = HttpRequest()
-                request_comprar.data = {'idLoja': compra['lojaId'], 'idItem': compra['itemId'], 'quantidade': 1, 'idPersonagem': idPersonagem}
+                request_comprar.data = {'idLoja': compra['lojaId'], 'idItem': compra['itemId'], 'quantidade': 1,
+                                        'idPersonagem': idPersonagem}
                 print(request_comprar.data)
                 retorno = self.comprar_item(request=request_comprar)
 
-            if(dinheiro_atual == 0 or comprou_algo == False):
+            if (dinheiro_atual == 0 or comprou_algo == False):
                 consegue_comprar = False
 
             carrinho_compras = []
 
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='realizar_compras_semanais',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='realizar_compras_semanais',
             url_name='realizar_compras_semanais', detail=False)
     def realizar_compras_semanais(self, request):
-        
+
         try:
             personagens = Personagem.objects.filter(tipo='npc')
 
             for personagem in personagens:
                 renda = personagem.getOuro()
-                gastosSemanais = GastosSemanais.objects.filter(estiloVida = personagem.estiloVida)
+                gastosSemanais = GastosSemanais.objects.filter(estiloVida=personagem.estiloVida)
 
                 gastos_por_tipo = {}
 
@@ -297,72 +274,56 @@ class LojaViewSet(viewsets.ModelViewSet):
         except ObjectDoesNotExist as e:
             print(e)
             return JsonResponse({'message': 'Erro ao efetuar compra'},
-                                    status=status.HTTP_200_OK)   
+                                status=status.HTTP_200_OK)
+
 
 class EstoqueViewSet(viewsets.ModelViewSet):
     queryset = Estoque.objects.all()
     serializer_class = EstoqueSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
     filterset_fields = ['loja_id']
 
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='add-item-loja',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='add-item-loja',
             url_name='add_item_loja', detail=False)
     def add_item_loja(self, request):
         id_loja = request.data['idLoja']
         id_item = request.data['idItem']
         quantidade = int(request.data['quantidade'])
-        try:
-            estoque = Estoque.objects.get(loja=id_loja, item=id_item)
-            estoque.quantidade_item += quantidade
-            estoque.save()
-            return JsonResponse({'message': 'Item adicionado ao estoque', 'quantidade': estoque.quantidade_item},
-                                status=status.HTTP_200_OK)
+        preco = float(request.data['preco']) if 'preco' in request.data else None
 
-        except ObjectDoesNotExist:
-            loja = Loja.objects.get(pk=id_loja)
-            item = Item.objects.get(pk=id_item)
-            preco = float(request.data['preco']) if (
-                'preco' in request.data) else item.preco_sugerido
+        loja = Loja.objects.get(id=id_loja)
+        resultado = loja.add_item(id_item=id_item, quantidade=quantidade, preco=preco)
+        return JsonResponse({'message': resultado}, status=status.HTTP_200_OK)
 
-            estoque = Estoque(loja=loja, item=item,
-                              quantidade_item=quantidade, preco_item=preco)
-            estoque.save()
-            return JsonResponse({'message': 'Item adicionado ao estoque'}, status=status.HTTP_201_CREATED)
-
-    @action(methods=['post'], permission_classes=[permissions.IsAuthenticated], url_path='remove-item-loja',
+    @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='remove-item-loja',
             url_name='remove_item_loja', detail=False)
     def remove_item_loja(self, request):
         id_loja = request.data['idLoja']
         id_item = request.data['idItem']
         quantidade = int(request.data['quantidade'])
-        estoque = Estoque.objects.get(loja=id_loja, item=id_item)
-        nova_quantidade = estoque.quantidade_item - quantidade
 
-        if nova_quantidade > 0:
-            estoque.quantidade_item = nova_quantidade
-            estoque.save()
-        elif nova_quantidade == 0:
-            estoque.delete()
-
-        else:
-            return JsonResponse({'message': f'Não é possível remover {quantidade} itens, '
-                                            f'essa loja possui apenas {estoque.quantidade_item}.'},
-                                status=status.HTTP_401_UNAUTHORIZED)
-
-        return JsonResponse({'message': 'Item removido do estoque'}, status=status.HTTP_200_OK)
+        try:
+            loja = Loja.objects.get(id=id_loja)
+            resultado = loja.remove_item(id_item=id_item, quantidade=quantidade)
+            return JsonResponse({'message': resultado}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return JsonResponse({'message': e}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-class HistoricoViewSet (viewsets.ModelViewSet):
+class HistoricoViewSet(viewsets.ModelViewSet):
     queryset = Historico.objects.all()
     serializer_class = HistoricoSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
+    filterset_fields = ['loja_id', 'personagem_id', 'tipo']
 
-class EstiloVidaViewSet (viewsets.ModelViewSet):
+
+class EstiloVidaViewSet(viewsets.ModelViewSet):
     queryset = EstiloVida.objects.all()
     serializer_class = EstiloVidaSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]
 
-class GastosSemanaisViewSet (viewsets.ModelViewSet):
+
+class GastosSemanaisViewSet(viewsets.ModelViewSet):
     queryset = GastosSemanais.objects.all()
     serializer_class = GastosSemanaisSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [PermissionToTelegram]

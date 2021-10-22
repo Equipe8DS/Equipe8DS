@@ -502,6 +502,7 @@
             "is_active": true,
             "email": "admin@admin.com",
             "username": "admin",
+            "uid_telegram": "113927682",
             "groups": [],
             "user_permissions": []
         }
@@ -591,6 +592,33 @@
             "caixa": 8000.0,
             "responsavel": 2,
             "ativo": true
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "fields": {
+            "quantidade_item": 1000,
+            "preco_item": 1,
+            "loja": 1,
+            "item": 2
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "fields": {
+            "quantidade_item": 1000,
+            "preco_item": 1,
+            "loja": 2,
+            "item": 2
+        }
+    },
+    {
+        "model": "bot.estoque",
+        "fields": {
+            "quantidade_item": 1000,
+            "preco_item": 1,
+            "loja": 3,
+            "item": 2
         }
     },
     {
