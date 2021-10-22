@@ -73,3 +73,5 @@ O quadro de conhecimento se manteve estável essa _Sprint_.
 - Não há melhorias a serem feitas
 
 ### 2. Análise do _Scrum Master_
+
+- Essa _Sprint_ foi uma das mais corridas. O pessoal se dedicou bastante para fazer uma entrega bacana para o professor. Ademais, acredito que se tivessemos mais um pouquinho de tempo, poderíamos ter feito um _bot_ impecável! Parabenizo o time pelo semestre.
