@@ -34,11 +34,18 @@ class PermissionToTelegram(permissions.BasePermission):
             return True
 
         try:
-           uid_telegram = request.data['uid_telegram']
+            if 'uid_telegram' in request.data:
+                uid_telegram = request.data['uid_telegram']
 
-           jogador = Jogador.objects.get(uid_telegram=uid_telegram)
-           if jogador is not None:
-               return True
+                jogador = Jogador.objects.get(uid_telegram=uid_telegram)
+                
+                if jogador is not None:
+                    return True
+                else:
+                    return False   
+            else:
+                return False
+
         except ObjectDoesNotExist:
             return False
 
