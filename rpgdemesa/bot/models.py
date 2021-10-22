@@ -17,7 +17,8 @@ class CategoriaItens:
         ('agricultura', 'Agricultura'),
         ('casa', 'Casa'),
         ('equipamento', 'Equipamento'),
-        ('luxo', 'Luxo')
+        ('luxo', 'Luxo'),
+        ('moeda', 'Moeda')
     ]
 
 
