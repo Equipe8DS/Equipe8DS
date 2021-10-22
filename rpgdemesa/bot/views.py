@@ -235,27 +235,34 @@ class LojaViewSet(viewsets.ModelViewSet):
         dinheiro_atual = dinheiro_total
         consegue_comprar = True
 
+        estoques_temporario = Estoque.objects.all()
+
         while (consegue_comprar):
-            estoques = Estoque.objects.all()
             comprou_algo = False
-            for estoque in estoques:
+            for estoque in estoques_temporario:
                 if estoque.item.categoria == gastoSemanal.tipo:
-                    if (dinheiro_atual >= estoque.preco_item):
-                        carrinho_compras.append({'lojaId': estoque.loja.id, 'itemId': estoque.item.id})
+                    if dinheiro_atual >= estoque.preco_item and estoque.quantidade_item > 0:
+                        indice = next((i for i, compra in enumerate(carrinho_compras) if compra['lojaId'] == estoque.loja.id and compra['itemId'] == estoque.item.id), None)
+
+                        print("Indice: " + str(indice))
+                        if indice is not None:
+                            carrinho_compras[indice]['quantidade'] += 1
+                        else:
+                            carrinho_compras.append({'lojaId': estoque.loja.id, 'itemId': estoque.item.id, 'quantidade': 1})
+
+                        estoque.quantidade_item -= 1
                         dinheiro_atual = dinheiro_atual - estoque.preco_item
                         comprou_algo = True
 
-            for compra in carrinho_compras:
-                request_comprar = HttpRequest()
-                request_comprar.data = {'idLoja': compra['lojaId'], 'idItem': compra['itemId'], 'quantidade': 1,
-                                        'idPersonagem': idPersonagem}
-                print(request_comprar.data)
-                retorno = self.comprar_item(request=request_comprar)
-
-            if (dinheiro_atual == 0 or comprou_algo == False):
+            if dinheiro_atual == 0 or comprou_algo == False:
                 consegue_comprar = False
 
-            carrinho_compras = []
+        for compra in carrinho_compras:
+            request_comprar = HttpRequest()
+            request_comprar.data = {'idLoja': compra['lojaId'], 'idItem': compra['itemId'], 'quantidade': 1,
+                                    'idPersonagem': idPersonagem}
+            print(request_comprar.data)
+            retorno = self.comprar_item(request=request_comprar)
 
     @action(methods=['post'], permission_classes=[PermissionToTelegram], url_path='realizar_compras_semanais',
             url_name='realizar_compras_semanais', detail=False)
