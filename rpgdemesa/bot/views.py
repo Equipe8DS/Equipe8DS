@@ -214,9 +214,9 @@ class LojaViewSet(viewsets.ModelViewSet):
 
         if personagem_has_gold and loja_has_estoque:
             loja.remove_item(id_item=id_item, quantidade=quantidade)
-            personagem.add_item_inventario(item=id_item, quantidade=quantidade)
+            personagem.add_item_comprado_inventario(item=id_item, quantidade=quantidade)
 
-            personagem.remove_ouro(valor_compra)
+            personagem.remove_ouro_compra(valor_compra)
             loja.add_ouro(valor_compra)
 
             historico = Historico(personagem_id=personagem.id, item_id=id_item, quantidade=quantidade,

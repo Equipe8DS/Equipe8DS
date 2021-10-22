@@ -145,6 +145,17 @@ class Personagem(models.Model):
             self.tipo = 'npc'
         super(Personagem, self).save()
 
+    def add_item_comprado_inventario(self, item, quantidade):
+        try:
+            inventario = self.itempersonagem_set.get(item=item)
+            inventario.quantidade += quantidade
+            inventario.save()
+        except ObjectDoesNotExist:
+            self.itempersonagem_set.create(item_id=item, quantidade=quantidade)
+            self.save()
+
+        return 'Item adicionado ao inventário'
+
     def add_item_inventario(self, item, quantidade):
         try:
             inventario = self.itempersonagem_set.get(item=item)
@@ -158,6 +169,22 @@ class Personagem(models.Model):
         historico.save()
         return 'Item adicionado ao inventário'
 
+
+    def remove_item_dinheiro_compra_inventario(self, id_item, quantidade):
+        inventario = self.itempersonagem_set.get(item=id_item)
+        nova_quantidade = inventario.quantidade - quantidade
+
+        if nova_quantidade < 0:
+            raise Exception(f'Não é possível remover {quantidade} {inventario.item.nome}(s).')
+
+        elif nova_quantidade == 0 and not inventario.item.isOuro():
+            inventario.delete()
+
+        else:
+            inventario.quantidade = nova_quantidade
+            inventario.save()
+
+        return 'Item removido do inventário'
 
     def remove_item_inventario(self, id_item, quantidade):
         inventario = self.itempersonagem_set.get(item=id_item)
@@ -176,6 +203,10 @@ class Personagem(models.Model):
         historico = Historico(personagem_id=self.id, item_id=id_item, quantidade=quantidade, tipo='remocao')
         historico.save()
         return 'Item removido do inventário'
+
+    def remove_ouro_compra(self, quantidade):
+        ouro = Item.objects.get(nome='Ouro')
+        return self.remove_item_dinheiro_compra_inventario(id_item=ouro.id, quantidade=quantidade)
 
     def remove_ouro(self, quantidade):
         ouro = Item.objects.get(nome='Ouro')
